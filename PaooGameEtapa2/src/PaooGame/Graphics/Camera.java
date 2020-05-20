@@ -2,6 +2,7 @@ package PaooGame.Graphics;
 
 import PaooGame.Maps.Map;
 import PaooGame.RefLinks;
+import PaooGame.__Utils.Vector2D;
 
 public  class Camera {
 

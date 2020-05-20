@@ -5,8 +5,8 @@ import java.awt.*;
 import PaooGame.Animating.Animation;
 import PaooGame.Graphics.Assets;
 import PaooGame.Graphics.Camera;
-import PaooGame.Graphics.EntitySprite;
 import PaooGame.Input.MouseHandler;
+import PaooGame.Items.Characters.Entity;
 import PaooGame.RefLinks;
 import PaooGame.__Utils.Vector2D;
 
@@ -14,24 +14,21 @@ import PaooGame.__Utils.Vector2D;
 public class Hero extends Entity
 {
 
-    private Animation animation;
-    private EntitySprite pSprite;
-
-    private boolean rightDir=true;   // true = right   false = left
-    private boolean playingCAnim=false; // if true hero can't move till the end of anim
-
     private S_anim state = S_anim.idle;
     private int attack=0;
-    private float jump_speed=0;
-
-
 
 
     public Hero( float x, float y)
     {
         super(new Vector2D(x,y),Assets.player.getW(),Assets.player.getH());
         pSprite=Assets.player;
+        bounds.x=(int)(x+Assets.player.getW());
+        bounds.y=(int)(y+Assets.player.getH());
+        bounds.width=Assets.player.getW();
+        bounds.height=Assets.player.getH();
         animation=new Animation(pSprite.getSpriteArray(S_anim.R_idle.ordinal()));
+        attackBounds=new Rectangle(bounds.x,bounds.y,bounds.width+width/3,bounds.height);
+        RefLinks.setHero(this);
     }
 
     public Hero( float x, float y,float size)
@@ -43,8 +40,12 @@ public class Hero extends Entity
         bounds.width=(int)(Assets.player.getW()*size)/3;
         bounds.height=(int)(Assets.player.getH()*size/2);
 
+        attackBounds=new Rectangle(bounds.x,bounds.y,bounds.width+width/3,bounds.height);
+
+        damage=10;
         pSprite=Assets.player;
         animation=new Animation(pSprite.getSpriteArray(S_anim.R_idle.ordinal()));
+        RefLinks.setHero(this);
     }
 
 
@@ -56,13 +57,16 @@ public class Hero extends Entity
 
         Move();
         animation.update();
+
+        if(rightDir) attackBounds.x=bounds.x;
+        else    attackBounds.x=bounds.x-width/3;
     }
 
     @Override
     public void Move() {
         MoveY();
-        if (Camera.moveCamera(position.x,xMove)) return;
-        MoveX();
+        if (!Camera.moveCamera(GetX(),xMove))
+            MoveX();
     }
 
 
@@ -83,8 +87,9 @@ public class Hero extends Entity
 
     protected void actionSet()
     {
+        getMove();
         if (!playingCAnim && !inAir) {
-            if (life == 0) {
+            if (life < 0) {
                 setAnimation(S_anim.dead,true);
                 return;
             }
@@ -109,16 +114,13 @@ public class Hero extends Entity
             if (MouseHandler.mouseB == 1) {
                 nextAttack();
                 setAnimation(S_anim.attack,true);
-                if (attack==3) animation.setDelay(5);
+                if (attack != 3)  animation.setDelay(3);
                 return;
             }
 
-
-            getMove();
             if (xMove<0) setAnimation(S_anim.L_run);
             else if (xMove>0) setAnimation(S_anim.R_run);
             else setAnimation(S_anim.idle,false);
-
         }
     }
 
@@ -128,6 +130,8 @@ public class Hero extends Entity
             case roll: setRoll();break;
             case jump: setJump();break;
             case parry: setParry();break;
+            case attack: setAttack();break;
+
         }
     }
 
@@ -135,6 +139,12 @@ public class Hero extends Entity
     protected void nextAttack(){
         attack++;
         if (attack==4) attack=1;
+        xMove=0;
+    }
+
+    protected void setAttack(){
+        if (animation.getFrame()==8) EntityManager.attack(damage);
+        xMove=0;
     }
 
     protected void setAnimation(S_anim anim,boolean continu) {
@@ -157,19 +167,16 @@ public class Hero extends Entity
     }
 
     protected void setRoll(){
-        if(animation.getFrame()>3 && animation.getFrame()<10) {
-            if (rightDir) xMove= canMoveX(speed+2);
-            else    xMove= canMoveX(-speed-2);
-        }
-        else{
-            if(rightDir) xMove= canMoveX(2.f);
-            else    xMove= canMoveX(-2.f);
-        }
+
+            if(rightDir) xMove= canMoveX(speed);
+            else    xMove= canMoveX(-speed);
+
     }
 
     protected void setParry(){
         if (MouseHandler.mouseB!=3) playingCAnim=false;
         if(animation.getFrame()==9) animation.setDelay(-1);
+        xMove=0;
     }
 
     protected void setJump(){
@@ -178,11 +185,16 @@ public class Hero extends Entity
         else animation.setDelay(3);
     }
 
-    protected void gravity() {
-        jump_speed=canMoveY(++jump_speed);
-        inAir= jump_speed != 0;
-        yMove=jump_speed;
+    public void getHit(int damage){
+        if (state!=S_anim.parry && state!=S_anim.attack )
+        {
+            life -=damage;
+            setAnimation(S_anim.hit,true);
+            animation.setDelay(3);
+        }
+
     }
+
 
     @Override
     public void Draw(Graphics g)
@@ -195,6 +207,8 @@ public class Hero extends Entity
 
         g.setColor(Color.black);
         g.drawRect(bounds.x,bounds.y,bounds.width,bounds.height);
+        g.setColor(Color.blue);
+        g.drawRect(attackBounds.x,attackBounds.y,attackBounds.width,attackBounds.height);
 //        g.setColor(Color.red);
 //        g.drawRect((int)GetX(),(int)GetY(),width,height);
 

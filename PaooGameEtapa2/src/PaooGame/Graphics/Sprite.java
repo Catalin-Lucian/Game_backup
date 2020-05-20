@@ -75,8 +75,8 @@ public abstract class Sprite {
 
     public static void drawArray(Graphics g, BufferedImage[] img, Vector2D pos, int width, int height, int xOffset, int yOffset)
     {
-        float x=pos.x;
-        float y=pos.y;
+        float x=pos.getX();
+        float y=pos.getY();
 
         for (BufferedImage image: img){
             if (image!=null){
@@ -90,8 +90,8 @@ public abstract class Sprite {
 
 
     public static void drawArray(Graphics g, Font f, String word, Vector2D pos, int width, int height, int xOffset, int yOffset){
-        float x=pos.x;
-        float y=pos.y;
+        float x=pos.getX();
+        float y=pos.getY();
 
         for (int i=0;i<word.length();++i){
             if(word.charAt(i) != ' '){

@@ -102,7 +102,7 @@ public abstract class Map {
 
     public boolean getSolid(float w, float h){
         try {
-            return layers[nr_layers - 1][(int) (h / TILE_SIZE)][(int) ((w+Camera.getX_edge_left())/ TILE_SIZE)] != 0;
+            return layers[nr_layers - 1][(int) (h / TILE_SIZE)][(int) (w/ TILE_SIZE)] != 0;
         } catch (IndexOutOfBoundsException e) {
             return false;
         }
