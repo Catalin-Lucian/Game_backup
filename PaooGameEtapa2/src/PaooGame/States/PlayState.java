@@ -20,7 +20,7 @@ public class PlayState extends State
     {
         super(stateManager);
         entityManager=new EntityManager();
-        EntityManager.addEnemy(new Black_ball(1500,250,250,10,10,2f));
+        EntityManager.addEnemy(new Black_ball(1500,250,2));
         hero = new Hero(60, 350,2.5f );
         mapManager=new MapManager();
         mapManager.buildMap("static");

@@ -6,7 +6,6 @@ import PaooGame.Input.MouseHandler;
 import PaooGame.Input.KeyHandler;
 import PaooGame.Items.Hero;
 import PaooGame.Maps.Map;
-import PaooGame.__Utils.Vector2D;
 
 import java.awt.*;
 

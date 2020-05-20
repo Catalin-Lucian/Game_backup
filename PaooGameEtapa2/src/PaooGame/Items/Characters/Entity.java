@@ -11,12 +11,18 @@ public abstract class Entity extends Item
     public static final int DEFAULT_LIFE            = 100;
     public static final float DEFAULT_SPEED         = 7.0f;
 
+    protected static final short LEFT=1;
+    protected static final short RIGHT=0;
+    protected short direction=RIGHT;
+
+
     protected Animation animation;
     protected EntitySprite pSprite;
 
-    protected boolean playingCAnim=false; // if true hero can't move till the end of anim
-
+    protected boolean inAction =false; // if true hero can't move till the end of anim
     protected boolean rightDir=true;
+
+
     protected boolean inAir=true;
     protected float jump_speed=0;
 
@@ -116,13 +122,15 @@ public abstract class Entity extends Item
 
     protected void gravity() {
         jump_speed=canMoveY(++jump_speed);
-        inAir= jump_speed != 0;
+        //inAir= jump_speed != 0;
         yMove=jump_speed;
     }
 
     public Animation getAnimation(){
         return animation;
     }
-
+    public void setDamage(int damage){
+        this.damage=damage;
+    }
 }
 

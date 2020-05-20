@@ -1,102 +1,130 @@
 package PaooGame.Items.Characters;
 
 
-import PaooGame.Items.Characters.Enemys.E_anim;
+import PaooGame.Items.EntityManager;
 import PaooGame.RefLinks;
 import PaooGame.__Utils.Vector2D;
 
 public abstract class Enemy extends Entity {
 
-    protected int count=0;
+    protected static final short R_attack=0, L_attack=1;
+    protected static final short R_dead=2, L_dead=3;
+    protected static final short R_hit=4, L_hit=5;
+    protected static final short R_idle=6, L_idle=7;
+    protected static final short R_move=8,L_move=9;
+    protected static final short attack=R_attack;
+    protected static final short dead=R_dead;
+    protected static final short hit=R_hit;
+    protected static final short idle=R_idle;
+    protected static final short move=R_move;
+
 
     protected float range;
-    protected E_anim state= E_anim.R_attack;
+    protected short state= idle ;
+    protected float disEtoH;
+    protected short lastAnimation=R_idle;
+    protected short currentAnimation;
 
-    protected float d;
-    protected int attackSpeed;
+    protected short pushBack;
 
-    public Enemy(Vector2D pos, int width, int height,float range,int damage,int attackSpeed) {
+    public Enemy(Vector2D pos, int width, int height) {
         super(pos, width, height);
-        this.damage=damage;
-        this.range=range;
-        this.attackSpeed=attackSpeed;
+
     }
 
-    protected float detectHeroDistance(){
-
-        float d = position.getX() - RefLinks.getHeroX();
-        if (range > Math.abs(d)) return d;
-        return 0;
+    public boolean detectHero(){
+        disEtoH = position.getX() - RefLinks.getHeroX();
+        if (range < Math.abs(disEtoH)){
+            disEtoH =0;
+            return false;
+        }
+        return true;
     }
 
-    protected boolean inAttackRange(){
+    public boolean inAttackRange(){
         return RefLinks.getHeroBound().intersects(attackBounds);
     }
 
     public void getHit(int damage){
         life -= damage;
-        if (life<0){
-            if (rightDir) setAnimation(E_anim.R_dead);
-            else setAnimation(E_anim.L_dead);
-            animation.setDelay(3);
-            playingCAnim=true;
-            return;
+        if (life<0) state=dead;
+        else   {
+            jump_speed=-10;
+            pushBack=10;
+            state=hit;
         }
-        if (!rightDir) {
-            setAnimation(E_anim.L_hit);
-            xMove=canMoveX(100);
-        } else {
-            setAnimation(E_anim.R_hit);
-            xMove=canMoveX(-100);
-        }
-        animation.setDelay(7);
-        playingCAnim=true;
+        setAnimation(state);
+        animation.setDelay(4);
+        inAction=true;
     }
 
-    protected  void performAction(){
-        d=detectHeroDistance();
+    public void getState(){
+       if(!inAction) {
+           if (detectHero()) {
+               if (inAttackRange()) state =attack;
+               else state = move;
+           } else state = idle;
+       }
+    }
+
+    public void manageState(){
         gravity();
-        if (d==0){
-            _idle_();
-        }
-        else {
-            if(inAttackRange()){
-                _attack_();
-                animation.setDelay(6);
-            }
-            else _movement_();
+        switch (state){
+            case dead: _dead();break;
+            case hit: _hit();break;
+            case attack: _attack();break;
+            case idle:  _idle();break;
+            case move: _run();break;
         }
     }
 
-
-    protected void _idle_(){
-        if(rightDir) setAnimation(E_anim.R_idle);
-        else setAnimation(E_anim.L_idle);
+    protected void _dead(){
+        if (!inAction){
+            setAnimation(state);
+            inAction=true;
+        }
+        if(animation.onLastFrame()) EntityManager.removeEnemy(this);
     }
 
-    protected void _attack_(){
-        if (rightDir) setAnimation(E_anim.R_attack);
-        else setAnimation(E_anim.L_attack);
-      //  animation.setDelay(5);
-        hitPlayer();
+    protected void _hit(){
+        --pushBack;
+        if(pushBack<0) pushBack=0;
+        if (direction==LEFT) xMove=canMoveX(pushBack);
+        else xMove=canMoveX(-pushBack);
+        jump_speed=canMoveY(++jump_speed);
+        yMove=jump_speed;
     }
-    protected void _movement_(){
-        if(d>0){
-            rightDir=false;
+
+    protected void _attack(){
+       if (!inAction) {
+           setAnimation(state);
+           animation.setDelay(6);
+           hitPlayer();
+           inAction=true;
+       }
+    }
+
+    protected void _idle(){
+        setAnimation(state);
+    }
+
+    protected void _run(){
+        if(disEtoH >0){
+            direction=LEFT;
             xMove=canMoveX(-speed);
-            setAnimation(E_anim.L_move);
         }
-        if(d<0){
-            rightDir=true;
+        if(disEtoH <0){
+            direction=RIGHT;
             xMove=canMoveX(speed);
-            setAnimation(E_anim.R_move);
         }
+        setAnimation(state);
     }
 
-    protected void setAnimation(E_anim anim){
-        if (anim!=state){
-            animation.setFrames(pSprite.getSpriteArray(anim.ordinal()));
-            state=anim;
+    public void setAnimation(short state){
+        currentAnimation= (short) (state+direction);
+        if (currentAnimation!=lastAnimation){
+            animation.setFrames(pSprite.getSpriteArray(currentAnimation));
+            lastAnimation=currentAnimation;
         }
     }
 
@@ -126,6 +154,8 @@ public abstract class Enemy extends Entity {
 
 
 
-    protected abstract void hitPlayer();
+    protected void hitPlayer(){
+        RefLinks.getHero().getHit(damage);
+    }
 }
 

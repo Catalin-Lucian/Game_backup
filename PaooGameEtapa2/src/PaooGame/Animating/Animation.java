@@ -56,6 +56,9 @@ public class Animation {
     public BufferedImage getImage() { return frames[currentFrame]; }
     public boolean hasPlayedOnce(){ return timesPlayed >0; }
     public boolean hasPlayed(int i){ return timesPlayed == i;}
+    public boolean onLastFrame(){
+        return currentFrame==nrFrames-1;
+    }
 
 
 }

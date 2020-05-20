@@ -88,7 +88,7 @@ public class Hero extends Entity
     protected void actionSet()
     {
         getMove();
-        if (!playingCAnim && !inAir) {
+        if (!inAction && !inAir) {
             if (life < 0) {
                 setAnimation(S_anim.dead,true);
                 return;
@@ -148,9 +148,9 @@ public class Hero extends Entity
     }
 
     protected void setAnimation(S_anim anim,boolean continu) {
-        playingCAnim=continu;
+        inAction =continu;
         if (anim!=state){
-            animation.setFrames(pSprite.getSpriteArray(anim.get(anim,rightDir,attack)));
+            animation.setFrames(pSprite.getSpriteArray(anim.get(rightDir,attack)));
             state=anim;
         }
     }
@@ -174,7 +174,7 @@ public class Hero extends Entity
     }
 
     protected void setParry(){
-        if (MouseHandler.mouseB!=3) playingCAnim=false;
+        if (MouseHandler.mouseB!=3) inAction =false;
         if(animation.getFrame()==9) animation.setDelay(-1);
         xMove=0;
     }
@@ -188,7 +188,7 @@ public class Hero extends Entity
     public void getHit(int damage){
         if (state!=S_anim.parry && state!=S_anim.attack )
         {
-            life -=damage;
+          //  life -=damage;
             setAnimation(S_anim.hit,true);
             animation.setDelay(3);
         }
@@ -199,16 +199,16 @@ public class Hero extends Entity
     @Override
     public void Draw(Graphics g)
     {
-        if(playingCAnim && animation.hasPlayed(1)){
-            playingCAnim=false;
+        if(inAction && animation.hasPlayed(1)){
+            inAction =false;
         }
 
         g.drawImage(animation.getImage(),(int)GetX(),(int)GetY(),width,height,null);
 
-        g.setColor(Color.black);
-        g.drawRect(bounds.x,bounds.y,bounds.width,bounds.height);
-        g.setColor(Color.blue);
-        g.drawRect(attackBounds.x,attackBounds.y,attackBounds.width,attackBounds.height);
+//        g.setColor(Color.black);
+//        g.drawRect(bounds.x,bounds.y,bounds.width,bounds.height);
+//        g.setColor(Color.blue);
+//        g.drawRect(attackBounds.x,attackBounds.y,attackBounds.width,attackBounds.height);
 //        g.setColor(Color.red);
 //        g.drawRect((int)GetX(),(int)GetY(),width,height);
 
@@ -243,8 +243,8 @@ enum S_anim {
 
 
 
-    public  int get(S_anim state, boolean right, int nr){
-        switch (state){
+    public  int get(boolean right, int nr){
+        switch (this){
             case jump:
                 if (right) return R_jump.ordinal();
                 else return L_jump.ordinal();
