@@ -1,6 +1,8 @@
 package PaooGame.Items.Characters;
 
 
+import PaooGame.GUI.Health_bar;
+import PaooGame.Graphics.Assets;
 import PaooGame.Items.EntityManager;
 import PaooGame.RefLinks;
 import PaooGame.__Utils.Vector2D;
@@ -20,20 +22,16 @@ public abstract class Enemy extends Entity {
 
 
     protected float range;
-    protected short state= idle ;
     protected float disEtoH;
-    protected short lastAnimation=R_idle;
-    protected short currentAnimation;
 
-    protected short pushBack;
 
     public Enemy(Vector2D pos, int width, int height) {
         super(pos, width, height);
-
+        life_bar= new Health_bar(940,0,life);
     }
 
     public boolean detectHero(){
-        disEtoH = position.getX() - RefLinks.getHeroX();
+        disEtoH = position.getX() - RefLinks.getPlayerX();
         if (range < Math.abs(disEtoH)){
             disEtoH =0;
             return false;
@@ -42,7 +40,7 @@ public abstract class Enemy extends Entity {
     }
 
     public boolean inAttackRange(){
-        return RefLinks.getHeroBound().intersects(attackBounds);
+        return RefLinks.getPlayerBound().intersects(attackBounds);
     }
 
     public void getHit(int damage){
@@ -54,14 +52,14 @@ public abstract class Enemy extends Entity {
             state=hit;
         }
         setAnimation(state);
-        animation.setDelay(4);
+        animation.setDelay(5);
         inAction=true;
     }
 
     public void getState(){
        if(!inAction) {
            if (detectHero()) {
-               if (inAttackRange()) state =attack;
+               if (inAttackRange()) state = attack;
                else state = move;
            } else state = idle;
        }
@@ -69,6 +67,7 @@ public abstract class Enemy extends Entity {
 
     public void manageState(){
         gravity();
+        if(position.isUnderMap()) EntityManager.removeEnemy(this);
         switch (state){
             case dead: _dead();break;
             case hit: _hit();break;
@@ -91,8 +90,6 @@ public abstract class Enemy extends Entity {
         if(pushBack<0) pushBack=0;
         if (direction==LEFT) xMove=canMoveX(pushBack);
         else xMove=canMoveX(-pushBack);
-        jump_speed=canMoveY(++jump_speed);
-        yMove=jump_speed;
     }
 
     protected void _attack(){
@@ -155,7 +152,7 @@ public abstract class Enemy extends Entity {
 
 
     protected void hitPlayer(){
-        RefLinks.getHero().getHit(damage);
+        RefLinks.getPlayer().getHit(damage);
     }
 }
 

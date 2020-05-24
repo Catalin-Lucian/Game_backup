@@ -17,12 +17,10 @@ public class MapManager {
 
     public void buildMap(String type){
         if (type.equals("static")){
-            System.out.println("static map .....");
             mapFactory=new ParallaxMapFactory();
             map=mapFactory.createMap(Level.level_1);
             RefLinks.SetMap(map);
 
-            System.out.println("!!! Map created !!!");
         }
     }
 

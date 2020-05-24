@@ -7,6 +7,7 @@ import PaooGame.Input.MouseHandler;
 import PaooGame.States.*;
 import PaooGame.__Utils.Singleton;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 
@@ -69,7 +70,7 @@ public class Game extends Singleton implements Runnable
         final double timeFrame      = 1000000000 / framesPerSecond;
 
 
-        while (runState == true)
+        while (runState)
         {
 
             currentTime = System.nanoTime();
@@ -77,7 +78,6 @@ public class Game extends Singleton implements Runnable
 
             if((currentTime - oldTime) > timeFrame)
             {
-                //System.out.println((float) (currentTime - oldTime)-timeFrame);
                 Update();
                 Draw();
 
@@ -91,26 +91,21 @@ public class Game extends Singleton implements Runnable
 
     public synchronized void StartGame()
     {
-        if(runState == false)
+        if(!runState)
         {
             runState = true;
             gameThread = new Thread(this);
             gameThread.start();
         }
-        else
-        {
-            return;
-        }
+
     }
 
 
     public synchronized void StopGame()
     {
-        if(runState == true)
+        if(runState)
         {
-
             runState = false;
-
             try
             {
                 gameThread.join();
@@ -120,10 +115,7 @@ public class Game extends Singleton implements Runnable
                 ex.printStackTrace();
             }
         }
-        else
-        {
-            return;
-        }
+
     }
 
 
@@ -174,6 +166,10 @@ public class Game extends Singleton implements Runnable
 
     public MouseHandler getMouseHandler(){
         return mouseHandler;
+    }
+
+    public JFrame getFrame(){
+        return wnd.GetWndFrame();
     }
 }
 

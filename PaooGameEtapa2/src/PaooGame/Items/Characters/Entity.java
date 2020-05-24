@@ -1,6 +1,7 @@
 package PaooGame.Items.Characters;
 
 import PaooGame.Animating.Animation;
+import PaooGame.GUI.Health_bar;
 import PaooGame.Graphics.Camera;
 import PaooGame.Graphics.EntitySprite;
 import PaooGame.RefLinks;
@@ -15,16 +16,20 @@ public abstract class Entity extends Item
     protected static final short RIGHT=0;
     protected short direction=RIGHT;
 
+    protected short lastAnimation;
+    protected short currentAnimation;
+    protected short state;
+
 
     protected Animation animation;
     protected EntitySprite pSprite;
+    protected Health_bar life_bar;
 
     protected boolean inAction =false; // if true hero can't move till the end of anim
-    protected boolean rightDir=true;
-
 
     protected boolean inAir=true;
     protected float jump_speed=0;
+    protected short pushBack;
 
     protected int life;
     protected int damage;
@@ -122,7 +127,6 @@ public abstract class Entity extends Item
 
     protected void gravity() {
         jump_speed=canMoveY(++jump_speed);
-        //inAir= jump_speed != 0;
         yMove=jump_speed;
     }
 

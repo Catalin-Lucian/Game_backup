@@ -1,67 +1,61 @@
 package PaooGame.States;
 
 
+import PaooGame.GUI.BType;
 import PaooGame.RefLinks;
-import PaooGame.__Utils.Vector2D;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 public class StateManager {
 
-    private ArrayList <State> states;
-    public static Vector2D border;
-    public static final int PLAY =0;
-    public static final int MENU =1;
-    public static final int SETTINGS=2;
-    public static final int ABOUT=3;
+
+    protected  State currentState;
+    protected  State lastState;
+
+
+    public  BType quality= BType.HIGH;
+    public  BType difficulty= BType.NORMAL;
 
 
     public StateManager (){
-        border =new Vector2D(RefLinks.GetWidth(),RefLinks.GetHeight());
-       // Vector2D.setWorldVar(border.x, border.y);
-
-
-        states=new ArrayList<State>();
-        states.add(new PlayState(this));
-
-    }
-
-    public void Pop(int state){
-        states.remove(state);
-    }
-    public void Add(RefLinks refLinks,int state){
-        if (state== PLAY){
-            states.add(new PlayState( this));
-        }
-        if (state== MENU){
-            states.add(new MenuState( this));
-        }
-        if (state== SETTINGS){
-            states.add(new SettingsState( this));
-        }
-        if (state== ABOUT){
-            states.add(new AboutState( this));
-        }
-
-    }
-    public void addAndPop(int state){
+        currentState=new MenuState(this);
 
     }
 
     public void update(){
-     //   Vector2D.setWorldVar(border.x,border.y);
-        for (int i =0;i<states.size();++i){
-            states.get(i).Update();
-        }
+       currentState.Update();
     }
 
     public void draw(Graphics g){
-        for (int i =0;i<states.size();++i){
-            states.get(i).Draw(g);
-        }
+        currentState.Draw(g);
     }
 
+    public void Return(){
+        State aux=lastState;
+        lastState=currentState;
+        currentState=aux;
+    }
 
+    public void selectState(BType type){
+        lastState=currentState;
+        switch (type){
+            case MENU:
+                currentState=new MenuState(this);break;
+            case PLAY:
+                currentState=new PlayState(this);break;
+            case LOAD:
+
+            case SETTINGS:
+                currentState=new SettingsState(this);break;
+            case ABOUT:
+                currentState=new AboutState(this);break;
+            case PAUSE:
+                currentState=new PauseState(this);break;
+            case Exit:
+                RefLinks.GetGame().StopGame();
+
+
+        }
+    }
 
 }

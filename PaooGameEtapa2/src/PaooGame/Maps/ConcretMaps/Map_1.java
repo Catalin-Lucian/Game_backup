@@ -20,13 +20,12 @@ public class Map_1 extends Map {
         } catch (Exception e) {
             e.getStackTrace();
         }
-        System.out.println("build map_1 ...");
     }
 
     @Override
     public void initMap() {
-        System.out.println("init map ...");
         loadLayers();
+        spawnEntities();
     }
 
 

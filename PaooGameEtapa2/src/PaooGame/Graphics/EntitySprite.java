@@ -28,7 +28,7 @@ public class EntitySprite extends Sprite
     }
     
 
-    public BufferedImage[] getSpriteArray(int i){
+    public BufferedImage[] getSpriteArray(short i){
         return spriteArray[i];
     }
 

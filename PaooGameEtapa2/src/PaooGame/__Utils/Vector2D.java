@@ -1,11 +1,10 @@
 package PaooGame.__Utils;
 
 import PaooGame.Graphics.Camera;
+import PaooGame.Input.MouseHandler;
 import PaooGame.RefLinks;
-import javafx.scene.shape.Line;
 
-import java.awt.geom.Line2D;
-import java.sql.Ref;
+import java.awt.event.MouseAdapter;
 
 public class Vector2D {
 
@@ -13,7 +12,6 @@ public class Vector2D {
     private float y;
 
 
-    private static final int RANGE=20;
     public Vector2D(){
         x=0;
         y=0;
@@ -63,6 +61,11 @@ public class Vector2D {
 
     public boolean isUnderMap(){
         return y>RefLinks.GetHeight();
+    }
+
+    public boolean underMouse(float width,float height){
+        return (MouseHandler.mouseX>x && MouseHandler.mouseX<x+width &&
+                MouseHandler.mouseY>y && MouseHandler.mouseY<y+height);
     }
 
 }

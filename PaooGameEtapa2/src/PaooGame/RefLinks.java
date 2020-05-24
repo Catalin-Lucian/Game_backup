@@ -4,9 +4,10 @@ import PaooGame.Graphics.Camera;
 import PaooGame.Input.MouseHandler;
 
 import PaooGame.Input.KeyHandler;
-import PaooGame.Items.Hero;
+import PaooGame.Items.Player;
 import PaooGame.Maps.Map;
 
+import javax.swing.*;
 import java.awt.*;
 
 
@@ -15,7 +16,7 @@ public class RefLinks
     private static Game game;              /*!< Referinta catre obiectul Game.*/
     private static Map map;                /*!< Referinta catre harta curenta.*/
     private static Camera cam;
-    private static Hero hero;
+    private static Player player;
 
 
     public RefLinks(Game game)
@@ -71,32 +72,38 @@ public class RefLinks
         RefLinks.cam = cam;
     }
 
-    public static void setHero(Hero hero) {
-        RefLinks.hero = hero;
+    public static void setPlayer(Player player) {
+        RefLinks.player = player;
     }
 
-    public static Hero getHero() {
-        return hero;
+    public static Player getPlayer() {
+        return player;
     }
 
-    public static float getHeroX(){
-        return hero.getPos().getX()+Camera.getX_edge_left();
+    public static float getPlayerX(){
+        return player.getPos().getX()+Camera.getX_edge_left();
     }
 
-    public static float getHeroY(){
-        return hero.GetY();
+    public static float getPlayerY(){
+        return player.GetY();
     }
 
-    public static  Rectangle getHeroBound(){
-        Rectangle aux=new Rectangle(hero.getBounds());
+    public static  Rectangle getPlayerBound(){
+        Rectangle aux=new Rectangle(player.getBounds());
         aux.x += Camera.getX_edge_left();
         return aux;
     }
-    public static  Rectangle getHeroAttackBound(){
-        Rectangle aux=new Rectangle(hero.getAttackBounds());
+    public static  Rectangle getPlayerAttackBound(){
+        Rectangle aux=new Rectangle(player.getAttackBounds());
         aux.x += Camera.getX_edge_left();
         return aux;
     }
+
+    public static JFrame getFrame(){
+        return game.getFrame();
+    }
+
+
 
 
 }
