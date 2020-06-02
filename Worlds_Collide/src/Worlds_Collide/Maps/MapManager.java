@@ -4,7 +4,6 @@ package Worlds_Collide.Maps;
 
 import Worlds_Collide.RefLinks;
 import Worlds_Collide.__Utils.DataBase;
-import Worlds_Collide.__Utils.Settings;
 
 import java.awt.Graphics;
 
@@ -19,8 +18,7 @@ public class MapManager {
     public MapManager(DataBase dataBase){
         RefLinks.setMapManager(this);
         this.dataBase=dataBase;
-        if (RefLinks.getQuality()==Settings.HIGH) mapFactory=new ParallaxMapFactory();
-        else mapFactory=new ParallaxMapFactory(); // needs to change to staticfactory
+        mapFactory=new MapFactory();
 
         buildMap();
     }
@@ -28,9 +26,7 @@ public class MapManager {
     public MapManager(DataBase dataBase,boolean load){
         RefLinks.setMapManager(this);
         this.dataBase=dataBase;
-        if (RefLinks.getQuality()==Settings.HIGH) mapFactory=new ParallaxMapFactory();
-        else mapFactory=new ParallaxMapFactory(); // needs to change to staticfactory
-
+        mapFactory=new MapFactory();
         loadMap();
         buildMap();
     }
@@ -44,7 +40,7 @@ public class MapManager {
     }
 
     public void buildMap(){
-        map=mapFactory.createMap(level);
+        map =mapFactory.createMap(level);
         RefLinks.SetMap(map);
     }
 

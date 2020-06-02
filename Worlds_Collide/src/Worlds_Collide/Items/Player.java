@@ -125,7 +125,7 @@ public class Player extends Entity
             if (RefLinks.GetKeyHandler().K_space.clicked) {
                 inAir=true;
                 inAction=true;
-                jump_speed=-20;
+                jump_speed=-18;
                 setAnimation(jump);
                 animation.setDelay(5);
                 return;
@@ -207,7 +207,7 @@ public class Player extends Entity
             setAnimation(attack);
             if (attackType != 3)  animation.setDelay(3);
         }
-        xMove=0;
+        xMove =0;
     }
 
     protected void nextAttack(){
@@ -252,7 +252,6 @@ public class Player extends Entity
         }
 
         g.drawImage(animation.getImage(),(int)GetX(),(int)GetY(),width,height,null);
-        life_bar.drawGreen(g,life);
 
 //        g.setColor(Color.black);
 //        g.drawRect(bounds.x,bounds.y,bounds.width,bounds.height);
@@ -261,6 +260,10 @@ public class Player extends Entity
 //        g.setColor(Color.red);
 //        g.drawRect((int)GetX(),(int)GetY(),width,height);
 
+    }
+
+    public void drawBar(Graphics g){
+        life_bar.drawGreen(g,life);
     }
 
 

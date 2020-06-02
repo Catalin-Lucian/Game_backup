@@ -14,14 +14,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public abstract class Map {
+public abstract class  Map {
     public static final int TILE_SIZE=48;
     protected static int M_WIDTH_SIZE ;
 
     protected TilesSprite sprite;
     protected BufferedImage back;
     protected BufferedImage front;
-    protected BufferedImage light;
     protected int [][][] layers;
 
     protected int nr_layers;
@@ -33,14 +32,7 @@ public abstract class Map {
 
     public Map(){
         this.sprite= Assets.map_sprite;
-        this.quality=RefLinks.getQuality();
-    }
-
-    public abstract void initMap();
-
-
-    public BufferedImage cropImage(BufferedImage image,double delay){
-        return image.getSubimage((int) (Camera.getX_edge_left()*delay),0, RefLinks.GetWidth(),image.getHeight());
+        quality=RefLinks.getQuality();
     }
 
 
@@ -66,6 +58,7 @@ public abstract class Map {
         M_WIDTH_SIZE=width_tiles*TILE_SIZE;
     }
 
+
     public void spawnEntities(){
         for (int hpoz=0;hpoz<height_tiles;++hpoz){
             for (int wpoz=0;wpoz<width_tiles;++wpoz){
@@ -74,13 +67,13 @@ public abstract class Map {
         }
     }
 
+
+
     public void drawBack(Graphics g){
 
-        if (quality== Settings.HIGH){
-            g.drawImage(cropImage(back,0.5),0,0,null);
-        }else{
-            g.drawImage(cropImage(back,0),0,0,null);
-        }
+
+        g.drawImage(cropImage(back,0.5),0,0,null);
+
 
         for (int l=0;l<nr_layers-1;++l) {
             for (int hpoz =0; hpoz < height_tiles; ++hpoz) {
@@ -102,6 +95,8 @@ public abstract class Map {
 
     }
 
+
+
     public void drawFront(Graphics g){
 
         for (int hpoz =0; hpoz < height_tiles; ++hpoz) {
@@ -110,14 +105,8 @@ public abstract class Map {
                     g.drawImage(sprite.getTile(layers[2][hpoz][wpoz]), (int )(wpoz*TILE_SIZE-Camera.getX_edge_left()), hpoz*TILE_SIZE, null);
             }
         }
+        if (quality== Settings.HIGH) g.drawImage(cropImage(front,1.5),0,0,null);
 
-        if (quality==Settings.HIGH){
-            g.drawImage(cropImage(light,1),0,0,null);
-        }
-
-        if (quality==Settings.HIGH){
-            g.drawImage(cropImage(front,1.5),0,0,null);
-        }
     }
 
     public static int getmWidthSize(){
@@ -131,6 +120,10 @@ public abstract class Map {
         } catch (IndexOutOfBoundsException e) {
             return false;
         }
+    }
+
+    public BufferedImage cropImage(BufferedImage image, double delay){
+        return image.getSubimage((int) (Camera.getX_edge_left()*delay),0, RefLinks.GetWidth(),image.getHeight());
     }
 
     public void reset(){

@@ -30,10 +30,11 @@ public class GameWindow
         }
 
         wndFrame = new JFrame(wndTitle);
-        wndFrame.setTitle("The_Island");
+        wndFrame.setTitle("Worlds_Collide");
         wndFrame.setSize(wndWidth, wndHeight);
         wndFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        wndFrame.setResizable(false);
+        wndFrame.setState(JFrame. MAXIMIZED_BOTH);
+       // wndFrame.setResizable(false);
         wndFrame.setLocationRelativeTo(null);
 
 

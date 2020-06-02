@@ -19,7 +19,6 @@ public class Assets
 
     public static BufferedImage lvl_1_back;
     public static BufferedImage lvl_1_front;
-    public static BufferedImage lvl_1_light;
 
 
 
@@ -44,7 +43,6 @@ public class Assets
 
         lvl_1_back=ImageLoader.LoadImage("/Textures/Levels/level_1/lvl_1_back.png");
         lvl_1_front=ImageLoader.LoadImage("/Textures/Levels/level_1/lvl_1_front.png");
-        lvl_1_light=ImageLoader.LoadImage("/Textures/Levels/level_1/lvl_1_light.png");
 
 
 

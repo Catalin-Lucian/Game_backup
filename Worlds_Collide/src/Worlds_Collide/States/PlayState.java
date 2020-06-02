@@ -56,6 +56,7 @@ public class PlayState extends State
         entityManager.Draw(g);
         player.Draw(g);
         mapManager.drawMapFront(g);
+        player.drawBar(g);
 
 
     }
