@@ -7,6 +7,9 @@ import Worlds_Collide.__Utils.DataBase;
 
 import java.awt.*;
 
+/*
+ *   controls all states
+ */
 public class StateManager {
 
 
@@ -17,7 +20,7 @@ public class StateManager {
     public  int quality; //
     public  int difficulty;
 
-
+    /// creates a new state manager
     public StateManager (){
         currentState=new MenuState(this);
         RefLinks.setStateManager(this);
@@ -28,20 +31,24 @@ public class StateManager {
 
     }
 
+    /// update current state
     public void update(){
        currentState.Update();
     }
 
+    ///draw current state
     public void draw(Graphics g){
         currentState.Draw(g);
     }
 
+    /// swap currentState with lastState
     public void Return(){
         State aux=lastState;
         lastState=currentState;
         currentState=aux;
     }
 
+    /// changes currentState
     public void selectState(BType type){
         lastState=currentState;
         switch (type){

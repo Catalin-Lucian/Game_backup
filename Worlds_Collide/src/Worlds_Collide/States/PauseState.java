@@ -9,6 +9,10 @@ import Worlds_Collide.RefLinks;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+
+/*
+ *   used to pause the game to save it or exit
+ */
 public class PauseState extends State {
 
     protected BufferedImage background;

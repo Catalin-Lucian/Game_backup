@@ -1,5 +1,6 @@
 package Worlds_Collide.GUI;
 
+///all types of buttons
 public enum BType {
     MENU,
     PLAY,

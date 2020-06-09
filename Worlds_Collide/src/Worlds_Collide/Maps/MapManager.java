@@ -7,15 +7,16 @@ import Worlds_Collide.__Utils.DataBase;
 
 import java.awt.Graphics;
 
-
+///manages maps
 public class MapManager {
 
-    private Map map;
+    private Map map;///< current map
     private final MapFactory mapFactory;
-    private int level=1;
-    private boolean changeLvL=false;
-    private final DataBase dataBase;
+    private int level=1;///< current level
+    private boolean changeLvL=false;///< bool to see if to change map
+    private final DataBase dataBase;///< instance of class data base
 
+    /// crates new map
     public MapManager(DataBase dataBase){
         RefLinks.setMapManager(this);
         this.dataBase=dataBase;
@@ -24,6 +25,7 @@ public class MapManager {
         buildMap();
     }
 
+    /// load last map played
     public MapManager(DataBase dataBase,boolean load){
         RefLinks.setMapManager(this);
         this.dataBase=dataBase;
@@ -32,19 +34,23 @@ public class MapManager {
         buildMap();
     }
 
+    /// loads level from database
     public void loadMap(){
         level= dataBase.getData("MAP","PLAYER");
     }
 
+    /// save lvl in database
     public void saveMap(){
         dataBase.updateMap(level);
     }
 
+    /// builds the map
     public void buildMap(){
         map =mapFactory.createMap(level);
         RefLinks.SetMap(map);
     }
 
+    /// return the lvl
     public int getLevel(){
         return level;
     }
@@ -66,6 +72,7 @@ public class MapManager {
         map.drawFront(g);
     }
 
+    /// is called to announce the change of an map
     public void changeLVL(int index){
         level +=index;
         changeLvL=true;

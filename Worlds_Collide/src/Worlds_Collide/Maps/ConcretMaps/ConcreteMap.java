@@ -5,9 +5,10 @@ import Worlds_Collide.Maps.Map;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
-
+///a nconcred map
 public class ConcreteMap extends Map {
 
+    ///need a front ,back image and path to mpa data
     public ConcreteMap(BufferedImage back, BufferedImage front, String pathLvl) {
 
         this.back=back;

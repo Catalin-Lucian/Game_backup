@@ -1,7 +1,7 @@
 package Worlds_Collide.Items;
 
 import java.awt.*;
-import java.sql.Ref;
+
 
 import Worlds_Collide.Animating.Animation;
 import Worlds_Collide.GUI.Health_bar;
@@ -15,8 +15,10 @@ import Worlds_Collide.__Utils.DataBase;
 import Worlds_Collide.__Utils.Vector2D;
 
 
+/// the player class
 public class Player extends Entity
 {
+    /// all action states
     protected final short R_attack_1=0, L_attack_1=1;
     protected final short R_attack_2=2, L_attack_2=3;
     protected final short R_attack_3=4, L_attack_3=5;
@@ -39,18 +41,21 @@ public class Player extends Entity
 
 
 
-    private short state = idle;
+    private short state = idle;///<start state/ current state
     private short attackType=0;
+
     private boolean continueAttacking=false;
-    protected int potions=0;
-    protected Animation pAnimation;
-    protected Vector2D startMapPosition;
+
+    protected int potions=0;///< nr of potions
+
+    protected Animation pAnimation;///< potion animation
+    protected Vector2D startMapPosition;///< position for start of map
 
 
-    protected int fulllife;
+    protected int fulllife;///< max life
     protected int count=0;
 
-    protected int deaths=0;
+    protected int deaths=0;///< number of deaths
     protected Font myfont=new Font("Monospaced", Font.BOLD,25);
 
 
@@ -121,6 +126,7 @@ public class Player extends Entity
         onEdge();
     }
 
+    ///move player or camera
     @Override
     public void Move() {
         MoveY();
@@ -128,6 +134,7 @@ public class Player extends Entity
             MoveX();
     }
 
+    /// set collision bounds
     public void setBounds(){
         bounds.x=(int)(position.getX()+width/2-20);
         bounds.y=(int)(position.getY()+width/3);
@@ -135,12 +142,13 @@ public class Player extends Entity
         bounds.height=(int)(height/2.3);
     }
 
+    ///set attack  bounds
     public void setAttackBounds(){
         attackBounds=new Rectangle(bounds.x,bounds.y,bounds.width+width/3,bounds.height);
     }
 
 
-
+    ///get player movement
     protected void getMove(){
         xMove=0;
         if (RefLinks.GetKeyHandler().K_left.down) {
@@ -153,6 +161,7 @@ public class Player extends Entity
         }
     }
 
+    ///get state
     protected void getState() {
         getMove();
         count++;
@@ -205,6 +214,7 @@ public class Player extends Entity
 
     }
 
+    ///check what state is in and calles state method
     protected void manageState(){
         switch (state){
             case roll: setRoll();break;
@@ -218,7 +228,7 @@ public class Player extends Entity
         gravity();
     }
 
-
+    ///manage hit state
     protected void setHit(){
         if (RefLinks.GetKeyHandler().K_shift.clicked) setAnimation(roll);
         if (RefLinks.GetKeyHandler().K_space.clicked) {
@@ -230,6 +240,7 @@ public class Player extends Entity
         }
      }
 
+    ///method called by enemies
     public void getHit(int damage){
         if (state!=parry && state!=roll)
         {
@@ -245,27 +256,32 @@ public class Player extends Entity
 
     }
 
+    ///manage dead state
     protected void setDead(){
         if (animation.onLastFrame()) resetAll();
         xMove=0;
     }
 
+    ///manage roll state
     protected void setRoll(){
         if(direction==RIGHT) xMove= canMoveX(speed+3);
         else    xMove= canMoveX(-speed-3);
     }
 
+    ///manage jump state
     protected void setJump(){
         if (animation.getFrame()==7 && inAir) animation.setDelay(-1);
         else animation.setDelay(3);
     }
 
+    ///manage parry state
     protected void setParry(){
         if (MouseHandler.mouseB!=3) inAction =false;
         if (animation.getFrame()==9) animation.setDelay(-1);
         xMove=0;
     }
 
+    ///manage attack state
     protected void setAttack(){
         int frame=animation.getFrame();
         if (frame==4){
@@ -291,12 +307,14 @@ public class Player extends Entity
         }
     }
 
+    ///manage attack state
     protected void nextAttack(){
         attackType+=2;
         if (attackType>4) attackType=0;
         xMove=0;
     }
 
+    ///sets animation if state is changed
     protected void setAnimation(short newState){
         state=newState;
         if (newState==attack) currentAnimation= (short) (newState+direction+attackType);
@@ -307,8 +325,10 @@ public class Player extends Entity
         }
     }
 
+    ///resets all stats an position
     protected void resetAll(){
         deaths++;
+        potions=0;
         life=fulllife;
         position.setVector(startMapPosition);
         setBounds();
@@ -316,6 +336,7 @@ public class Player extends Entity
         Camera.init();
     }
 
+    /// check if out of map and cals to change map
     public void onEdge(){
        if(bounds.x+Camera.getX_edge_left()> Map.getmWidthSize()){
            RefLinks.getMapManager().changeLVL(1);
@@ -328,7 +349,7 @@ public class Player extends Entity
 
     public void setDeaths(int deaths){
         this.deaths=deaths;
-    }
+    }///< stes nr deaths
 
     public int getDeaths() {
         return deaths;
@@ -355,6 +376,7 @@ public class Player extends Entity
         super.SetLife(life);
     }
 
+    ///save stats in database
     public void saveStats(DataBase d){
         d.updateLife(life);
         d.updateDeaths(deaths);
@@ -362,12 +384,14 @@ public class Player extends Entity
         d.updatePosition((int)startMapPosition.getX(),(int)startMapPosition.getY());
     }
 
+    ///set the position
     public void setPosition(int x ,int y){
         position.setVector(x,y);
         setBounds();
         setAttackBounds();
     }
 
+    ///draw the animation
     @Override
     public void Draw(Graphics g)
     {
@@ -384,15 +408,17 @@ public class Player extends Entity
 //        g.setColor(Color.red);
 //        g.drawRect((int)GetX(),(int)GetY(),width,height);
 
+
+
+    }
+
+    ///draw the UI
+    public void drawBar(Graphics g){
+        life_bar.drawGreen(g,life);
         g.setColor(Color.red);
         g.drawImage(pAnimation.getImage(),-30,550,160,160,null);
         g.setFont(myfont);
         g.drawString(Integer.toString(potions),100,700);
-
-    }
-
-    public void drawBar(Graphics g){
-        life_bar.drawGreen(g,life);
     }
 
 

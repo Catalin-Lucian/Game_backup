@@ -2,12 +2,14 @@ package Worlds_Collide.__Utils;
 
 import java.sql.*;
 
-
+/// class that save all the necessary player stats in local data base
 public class DataBase {
 
     protected Connection c;
     protected Statement stmt;
 
+
+    /// connects to data base
     public DataBase() {
         try {
             Class.forName("org.sqlite.JDBC");
@@ -18,6 +20,7 @@ public class DataBase {
         }
     }
 
+    /// get specific data form table
     public int getData(String data,String table){
         int q=0;
         try{
@@ -30,6 +33,7 @@ public class DataBase {
        return q;
     }
 
+    /// updates settings
     public void updateSettings(int quality,int difficulty){
         try{
             stmt.executeUpdate("UPDATE SETTINGS SET QUALITY = "+quality);
@@ -39,6 +43,7 @@ public class DataBase {
         }
     }
 
+    ///updated current map
     public void updateMap(int map){
         try{
             stmt.executeUpdate("UPDATE PLAYER SET MAP = "+map);
@@ -47,6 +52,7 @@ public class DataBase {
         }
     }
 
+    ///updates player's life
     public void updateLife(int life){
         try{
             stmt.executeUpdate("UPDATE PLAYER SET LIFE = "+life);
@@ -55,6 +61,7 @@ public class DataBase {
         }
     }
 
+    ///updates number of deaths
     public void updateDeaths(int deaths){
         try{
             stmt.executeUpdate("UPDATE PLAYER SET DEATHS = "+deaths);
@@ -63,6 +70,7 @@ public class DataBase {
         }
     }
 
+    ///updates number of player's heal potions
     public void updatePotions(int potions){
         try{
             stmt.executeUpdate("UPDATE PLAYER SET BOTTLES = "+potions);
@@ -71,6 +79,7 @@ public class DataBase {
         }
     }
 
+    ///update player start map position
     public void updatePosition(int x,int y){
         try{
             stmt.executeUpdate("UPDATE PLAYER SET X = "+x);
@@ -80,6 +89,7 @@ public class DataBase {
         }
     }
 
+    ///close the statement and the connection
     public void close() {
         try{
             stmt.close();

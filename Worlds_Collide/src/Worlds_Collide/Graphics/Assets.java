@@ -2,6 +2,9 @@ package Worlds_Collide.Graphics;
 
 import java.awt.image.BufferedImage;
 
+/*
+* contains all the assets needed to display the game
+ */
 public class Assets
 {
     public static EntitySprite player;
@@ -44,12 +47,14 @@ public class Assets
 
 
     public static void Init() {
+        ///all the entities
         player=new EntitySprite(89,76,ImageLoader.LoadImage("/Textures/Entitys/player.png"));
         black_ball=new EntitySprite(64,64,ImageLoader.LoadImage("/Textures/Entitys/black_ball.png"));
         mushroom=new EntitySprite(150,150,ImageLoader.LoadImage("/Textures/Entitys/mushroom.png"));
         boss=new EntitySprite(78,49,ImageLoader.LoadImage("/Textures/Entitys/boss.png"));
 
 
+        ///all GUI elements
         menu_image=ImageLoader.LoadImage("/Textures/GUI/menu.png");
         about_image=ImageLoader.LoadImage("/Textures/GUI/about.png");
         settings_image=ImageLoader.LoadImage("/Textures/GUI/settings.png");
@@ -60,10 +65,11 @@ public class Assets
         life_bar=new TilesSprite(340,68,ImageLoader.LoadImage("/Textures/GUI/lifebar.png"));
         x_button=new TilesSprite(43,60,ImageLoader.LoadImage("/Textures/GUI/x_button.png"));
         menu_button=new TilesSprite(336,96,ImageLoader.LoadImage("/Textures/GUI/menu_buttons.png"));
-        
 
         potion=new TilesSprite(160,160,ImageLoader.LoadImage("/Textures/GUI/potion.png"));
 
+
+        /// all images for background and foreground
         back_1 =ImageLoader.LoadImage("/Textures/Levels/level_1/lvl_1_back.png");
         front_1 =ImageLoader.LoadImage("/Textures/Levels/level_1/lvl_1_front.png");
 
@@ -85,7 +91,7 @@ public class Assets
         back_7 =ImageLoader.LoadImage("/Textures/Levels/level_7/back_7.png");
         front_7 =ImageLoader.LoadImage("/Textures/Levels/level_7/front_7.png");
 
-
+        /// the main sprite for all the tiles
         map_sprite=new TilesSprite(48,48,ImageLoader.LoadImage("/Textures/Levels/spritesheet.png"));
 
     }

@@ -7,6 +7,8 @@ import Worlds_Collide.Graphics.EntitySprite;
 import Worlds_Collide.RefLinks;
 import Worlds_Collide.__Utils.Vector2D;
 
+
+///base class for all entities
 public abstract class Entity extends Item
 {
     public static final int DEFAULT_LIFE            = 100;
@@ -55,6 +57,7 @@ public abstract class Entity extends Item
         MoveY();
     }
 
+    ///add Xmove to position and bounds
     public void MoveX()
     {
       position.addX(xMove);
@@ -63,6 +66,7 @@ public abstract class Entity extends Item
       xMove=0;
     }
 
+    ///add Ymove to position and bounds
     public void MoveY()
     {
         position.addY(yMove);
@@ -104,7 +108,7 @@ public abstract class Entity extends Item
     }
 
 
-
+    ///checks if can move on x axis return speed or 0
     public float canMoveX(float d){
         for (float h=bounds.y ; h<=(bounds.y+bounds.height); h+=bounds.height/2.) {
             if (d>0 && RefLinks.GetMap().getSolid(bounds.x + bounds.width + d+Camera.getX_edge_left(), h) ||
@@ -115,6 +119,7 @@ public abstract class Entity extends Item
         return d;
     }
 
+    ///checks if can move on y axis return speed or 0
     public float canMoveY(float d){
         for (float w=bounds.x ; w<=(bounds.x+bounds.width); w+=bounds.width/2.) {
             if (d> 0 && RefLinks.GetMap().getSolid(w+Camera.getX_edge_left(), bounds.y + bounds.height + d)){
@@ -126,6 +131,7 @@ public abstract class Entity extends Item
         return d;
     }
 
+    ///aplaies gravity
     protected void gravity() {
         jump_speed=canMoveY(++jump_speed);
         yMove=jump_speed;

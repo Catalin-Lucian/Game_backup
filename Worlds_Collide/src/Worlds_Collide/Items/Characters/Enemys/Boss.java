@@ -8,6 +8,7 @@ import Worlds_Collide.__Utils.Vector2D;
 
 import java.awt.*;
 
+/// main enemy
 public class Boss extends Enemy {
 
 

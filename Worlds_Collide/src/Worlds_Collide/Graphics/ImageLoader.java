@@ -4,10 +4,10 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-
+/// opens an image
 public class ImageLoader
 {
-
+    /// path to image
     public static BufferedImage LoadImage(String path)
     {
         try

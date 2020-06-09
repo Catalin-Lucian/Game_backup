@@ -5,7 +5,7 @@ import Worlds_Collide.__Utils.Vector2D;
 import java.awt.*;
 
 
-
+///base class for every item on map
 public abstract class Item
 {
     protected Vector2D position;

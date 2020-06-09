@@ -4,10 +4,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
+/// handler for all keys defined
 public class KeyHandler implements KeyListener {
 
     public static ArrayList<Key> keys=new ArrayList<>();
 
+    /// class for a key
     public  class Key {
         public int presses ;
         public boolean down, clicked;
@@ -16,6 +18,7 @@ public class KeyHandler implements KeyListener {
             keys.add(this);
         }
 
+        /// make button pressed or not
         public void toggle(boolean pressed){
             if (pressed != down){
                 down=pressed;
@@ -43,6 +46,7 @@ public class KeyHandler implements KeyListener {
     public KeyHandler(){
     }
 
+    /// toggle corresponded key true or false
     public void toggle(KeyEvent e,boolean pressed){
         if (e.getKeyCode()==KeyEvent.VK_A) K_left.toggle(pressed);
         if (e.getKeyCode()==KeyEvent.VK_D) K_right.toggle(pressed);

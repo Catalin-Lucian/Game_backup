@@ -1,5 +1,7 @@
 package Worlds_Collide.__Utils;
 
+
+///class that contains all settings possibilities
 public class Settings {
     public static final int EASY=0;
     public static final int NORMAL=1;

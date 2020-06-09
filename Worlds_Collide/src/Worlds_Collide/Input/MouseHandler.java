@@ -3,12 +3,13 @@ package Worlds_Collide.Input;
 import javax.swing.event.MouseInputListener;
 import java.awt.event.MouseEvent;
 
+///handler for mouse input
 public class MouseHandler implements MouseInputListener {
 
 
-    public static int mouseX=-1;
-    public static int mouseY=-1;
-    public static int mouseB=-1;
+    public static int mouseX=-1; ///< x position
+    public static int mouseY=-1; ///< y position
+    public static int mouseB=-1; ///< mouse button
 
     public MouseHandler(){
 

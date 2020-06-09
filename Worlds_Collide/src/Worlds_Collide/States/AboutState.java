@@ -10,6 +10,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 
+/*
+ *   tels player the keys to play
+ */
 public class AboutState extends State
 {
     protected MButton x_button;

@@ -7,6 +7,7 @@ import Worlds_Collide.Maps.ConcretMaps.ConcreteMap;
 
 public class MapFactory  {
 
+    /// return map conform level
     public Map createMap(int lvl){
         Map map;
         switch (lvl) {

@@ -9,7 +9,11 @@ import Worlds_Collide.RefLinks;
 
 import java.awt.*;
 
-
+/*
+ *  where the magic happens
+ * player is build and managed
+ * mapManager and enityManger created
+ */
 public class PlayState extends State
 {
     private Player player;              /*!< Referinta catre obiectul animat erou (controlat de utilizator).*/

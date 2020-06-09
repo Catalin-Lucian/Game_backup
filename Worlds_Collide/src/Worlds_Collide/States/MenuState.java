@@ -8,7 +8,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-
+/*
+ *  the main menu of the game
+ */
 public class MenuState extends State
 {
     protected BufferedImage background;

@@ -1,7 +1,5 @@
 package Worlds_Collide.Items.Characters;
 
-
-import Worlds_Collide.Animating.Animation;
 import Worlds_Collide.GUI.Health_bar;
 import Worlds_Collide.Graphics.Camera;
 import Worlds_Collide.Items.EntityManager;
@@ -10,8 +8,11 @@ import Worlds_Collide.__Utils.Vector2D;
 
 import java.awt.*;
 
+
+///base class for all enemies
 public abstract class Enemy extends Entity {
 
+    /// all types of actions states
     protected static final short R_attack=0, L_attack=1;
     protected static final short R_dead=2, L_dead=3;
     protected static final short R_hit=4, L_hit=5;
@@ -24,11 +25,11 @@ public abstract class Enemy extends Entity {
     protected static final short move=R_move;
 
 
-    protected float range;
-    protected float disEtoH;
-    protected int attackframe=0;
-    protected int gothitdirect;
-    protected int animationspeed=7;
+    protected float range;///< range to see player
+    protected float disEtoH;///< distance to lpayer
+    protected int attackframe=0;///<  in witch frame to attack
+    protected int gothitdirect;///< direction when get hit
+    protected int animationspeed=7;///< animation speed
 
 
     public Enemy(Vector2D pos, int width, int height) {
@@ -36,6 +37,7 @@ public abstract class Enemy extends Entity {
         life_bar= new Health_bar(940,0,life);
     }
 
+    /// detect if player in range
     public boolean detectHero(){
         disEtoH = position.getX() - RefLinks.getPlayerX();
         if (range < Math.abs(disEtoH)){
@@ -45,10 +47,12 @@ public abstract class Enemy extends Entity {
         return true;
     }
 
+    /// detect if player in attack bounds
     public boolean inAttackRange(){
         return RefLinks.getPlayerBound().intersects(attackBounds);
     }
 
+    /// get hit from player
     public void getHit(int damage,int direction){
         life -= damage;
         gothitdirect=direction;
@@ -63,6 +67,7 @@ public abstract class Enemy extends Entity {
         inAction=true;
     }
 
+    /// set the state
     public void getState(){
        if(!inAction) {
            if (detectHero()) {
@@ -74,6 +79,7 @@ public abstract class Enemy extends Entity {
        }
     }
 
+    ///manage current state
     public void manageState(){
         gravity();
         if(position.isUnderMap()) EntityManager.removeEnemy(this);
@@ -86,11 +92,13 @@ public abstract class Enemy extends Entity {
         }
     }
 
+    /// what to do when in state dead
     protected void _dead(){
         animation.setDelay(7);
         if(animation.onLastFrame()) EntityManager.removeEnemy(this);
     }
 
+    /// what to do when in state hit
     protected void _hit(){
         --pushBack;
         if(pushBack<0) pushBack=0;
@@ -98,6 +106,7 @@ public abstract class Enemy extends Entity {
         else xMove=canMoveX(-pushBack);
     }
 
+    /// what to do when in state attack
     protected void _attack(){
        if (!inAction) {
            setAnimation(state);
@@ -109,10 +118,12 @@ public abstract class Enemy extends Entity {
 
     }
 
+    /// what to do when in state idle
     protected void _idle(){
         setAnimation(state);
     }
 
+    /// what to do when in state run
     protected void _run(){
         if(disEtoH >0){
             direction=LEFT;
@@ -127,6 +138,7 @@ public abstract class Enemy extends Entity {
         setAnimation(state);
     }
 
+    ///set the animation conform state
     public void setAnimation(short state){
         currentAnimation= (short) (state+direction);
         if (currentAnimation!=lastAnimation){
@@ -138,7 +150,7 @@ public abstract class Enemy extends Entity {
     }
 
 
-
+    ///checks if can move on x axis return speed or 0
     @Override
     public float canMoveX(float d) {
         for (float h=bounds.y ; h<=(bounds.y+bounds.height); h+=bounds.height/2.) {
@@ -149,6 +161,7 @@ public abstract class Enemy extends Entity {
         return d;
     }
 
+    ///checks if can move on y axis return speed or 0
     @Override
     public float canMoveY(float d) {
         for (float w=bounds.x ; w<=(bounds.x+bounds.width); w+=bounds.width/2.) {
@@ -161,15 +174,18 @@ public abstract class Enemy extends Entity {
         return d;
     }
 
+    ///hits the player if in attack bounds
     protected void hitPlayer(){
         if(inAttackRange())
             RefLinks.getPlayer().getHit(damage);
     }
 
+    /// check if enemy on camera
     public boolean onCamera(){
         return bounds.x>Camera.getX_edge_left() &&  bounds.x+bounds.width<Camera.getX_edge_right()+100;
     }
 
+    ///if on camera updates
     @Override
     public void Update(){
         if(onCamera()){
@@ -179,6 +195,8 @@ public abstract class Enemy extends Entity {
             animation.update();
         }
     }
+
+    ///if on camera draws
     @Override
     public void Draw(Graphics g) {
 

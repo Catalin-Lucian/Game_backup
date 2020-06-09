@@ -6,13 +6,15 @@ import Worlds_Collide.__Utils.Vector2D;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+/// a simple button
 public class MButton {
     protected Vector2D position;
-    protected BufferedImage[] images =new BufferedImage[2];
+    protected BufferedImage[] images =new BufferedImage[2];///< sel and unsel images
     protected short sel=0; // 0 - unselected , 1 - selected
     protected float width;
     protected float height;
     protected BType BType;
+
 
     public MButton(float x, float y, BufferedImage normal, BufferedImage selected, BType BType){
         position=new Vector2D(x,y);

@@ -9,6 +9,9 @@ import Worlds_Collide.RefLinks;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+/*
+ *  show player the final stats
+ */
 public class EndSatate extends State {
 
     protected BufferedImage background;

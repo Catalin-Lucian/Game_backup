@@ -14,19 +14,20 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+///base class for map
 public abstract class  Map {
     public static final int TILE_SIZE=48;
     protected static int M_WIDTH_SIZE ;
 
-    protected TilesSprite sprite;
-    protected BufferedImage back;
-    protected BufferedImage front;
-    protected int [][][] layers;
+    protected TilesSprite sprite;///< tile class with all images
+    protected BufferedImage back;///< front image
+    protected BufferedImage front;///< back image
+    protected int [][][] layers;///< all data fro a map
 
-    protected int nr_layers;
-    protected int width_tiles;
-    protected int height_tiles;
-    protected int quality;
+    protected int nr_layers;///< number of layes
+    protected int width_tiles;///< nr tile per width
+    protected int height_tiles;///< nr tile per height
+    protected int quality;///< map quality
     protected File f;
 
 
@@ -35,7 +36,7 @@ public abstract class  Map {
         quality=RefLinks.getQuality();
     }
 
-
+    /// read data from file
     public void loadLayers() {
         try{
             Scanner scn=new Scanner(f);
@@ -58,7 +59,7 @@ public abstract class  Map {
         M_WIDTH_SIZE=width_tiles*TILE_SIZE;
     }
 
-
+    /// adds enemies to entityemanager list
     public void spawnEntities(){
         for (int hpoz=0;hpoz<height_tiles;++hpoz){
             for (int wpoz=0;wpoz<width_tiles;++wpoz){
@@ -69,7 +70,7 @@ public abstract class  Map {
     }
 
 
-
+    /// draw back layer
     public void drawBack(Graphics g){
 
 
@@ -97,7 +98,7 @@ public abstract class  Map {
     }
 
 
-
+    /// draw front layer
     public void drawFront(Graphics g){
 
         for (int hpoz =0; hpoz < height_tiles; ++hpoz) {
@@ -114,7 +115,7 @@ public abstract class  Map {
         return M_WIDTH_SIZE;
     }
 
-
+    /// return true if at position on col layer is solid
     public boolean getSolid(float w, float h){
         try {
             return layers[nr_layers - 1][(int) (h / TILE_SIZE)][(int) (w/ TILE_SIZE)] == 1;
@@ -123,10 +124,12 @@ public abstract class  Map {
         }
     }
 
+    /// crop images for the dimension needed
     public BufferedImage cropImage(BufferedImage image, double delay){
         return image.getSubimage((int) (Camera.getX_edge_left()*delay),0, RefLinks.GetWidth(),image.getHeight());
     }
 
+    /// resets map
     public void reset(){
         loadLayers();
         spawnEntities();

@@ -8,6 +8,8 @@ import Worlds_Collide.__Utils.Vector2D;
 
 import java.awt.*;
 
+
+///simple enemy
 public class Black_ball extends Enemy {
 
     public Black_ball(float x,float y,float size){

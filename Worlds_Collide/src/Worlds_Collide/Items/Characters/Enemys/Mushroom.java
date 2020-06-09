@@ -8,6 +8,7 @@ import Worlds_Collide.__Utils.Vector2D;
 
 import java.awt.*;
 
+/// simple enemy
 public class Mushroom extends Enemy {
 
     public Mushroom(float x,float y,float size){

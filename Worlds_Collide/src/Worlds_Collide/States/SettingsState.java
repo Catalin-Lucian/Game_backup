@@ -13,7 +13,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 
-
+/*
+ *   player can change the difficulty and quality of game
+ */
 public class SettingsState extends State
 {
 
