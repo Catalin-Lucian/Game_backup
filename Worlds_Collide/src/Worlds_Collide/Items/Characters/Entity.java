@@ -110,6 +110,7 @@ public abstract class Entity extends Item
             if (d>0 && RefLinks.GetMap().getSolid(bounds.x + bounds.width + d+Camera.getX_edge_left(), h) ||
                     d<0 && RefLinks.GetMap().getSolid(bounds.x + d+ Camera.getX_edge_left(), h))
                 return 0;
+            if(bounds.x+d<0) return 0;
         }
         return d;
     }

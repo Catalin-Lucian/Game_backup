@@ -17,10 +17,14 @@ public  class Camera {
 
 
     public Camera (){
+        RefLinks.SetCam(this);
+        init();
+    }
+
+    public static void init(){
         x_boundMax= Map.getmWidthSize();;
         x_edge_left=0;
         x_edge_right=RefLinks.GetWidth();
-        RefLinks.SetCam(this);
     }
 
     public static boolean moveCamera(float x,float f){
@@ -44,12 +48,12 @@ public  class Camera {
     public static void setX_boundMax(float size){
         x_boundMax=size;
     }
-
     public static float getX_edge_left() {
         return x_edge_left;
     }
-
     public static float getX_edge_right() {
         return x_edge_right;
     }
+
+
 }

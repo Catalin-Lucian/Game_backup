@@ -1,6 +1,7 @@
 package Worlds_Collide.Items;
 
 import java.awt.*;
+import java.sql.Ref;
 
 import Worlds_Collide.Animating.Animation;
 import Worlds_Collide.GUI.Health_bar;
@@ -8,6 +9,7 @@ import Worlds_Collide.Graphics.Assets;
 import Worlds_Collide.Graphics.Camera;
 import Worlds_Collide.Input.MouseHandler;
 import Worlds_Collide.Items.Characters.Entity;
+import Worlds_Collide.Maps.Map;
 import Worlds_Collide.RefLinks;
 import Worlds_Collide.__Utils.DataBase;
 import Worlds_Collide.__Utils.Vector2D;
@@ -46,7 +48,8 @@ public class Player extends Entity
     {
         super(new Vector2D(x,y),Assets.player.getW(),Assets.player.getH());
         pSprite=Assets.player;
-        bounds=new Rectangle((int)(x+Assets.player.getW()),(int)(y+Assets.player.getH()),Assets.player.getW(),Assets.player.getH());
+        bounds=new Rectangle(0,0,0,0);
+        setBounds();
         attackBounds=new Rectangle(bounds.x,bounds.y,bounds.width+width/3,bounds.height);
         animation=new Animation(pSprite.getSpriteArray(R_idle));
 
@@ -64,8 +67,10 @@ public class Player extends Entity
     {
         super(new Vector2D(x,y),(int)(Assets.player.getW()*size),(int)(Assets.player.getH()*size));
         pSprite=Assets.player;
-        bounds=new Rectangle((int)(x+pSprite.getW()*size/3.5),(int)(y+pSprite.getH()*size/3),(int)(pSprite.getW()*size)/4,(int)(pSprite.getH()*size/2));
-        attackBounds=new Rectangle(bounds.x,bounds.y,bounds.width+width/5,bounds.height);
+
+        bounds=new Rectangle(0,0,0,0);
+        setBounds();
+        attackBounds=new Rectangle(bounds.x,bounds.y,bounds.width+width/4,bounds.height);
         animation=new Animation(pSprite.getSpriteArray(R_idle));
 
         damage=10;
@@ -88,8 +93,11 @@ public class Player extends Entity
         Move();
         animation.update();
 
+
         if(direction==RIGHT) attackBounds.x=bounds.x;
-        else    attackBounds.x=bounds.x-width/5;
+        else    attackBounds.x=bounds.x-width/4;
+
+        onEdge();
     }
 
     @Override
@@ -97,7 +105,13 @@ public class Player extends Entity
         MoveY();
         if (!Camera.moveCamera(GetX(), xMove))
             MoveX();
+    }
 
+    public void setBounds(){
+        bounds.x=(int)(position.getX()+width/3);
+        bounds.y=(int)(position.getY()+width/3);
+        bounds.width=width/3;
+        bounds.height=(int)(height/2.3);
     }
 
 
@@ -116,10 +130,12 @@ public class Player extends Entity
 
     protected void getState() {
         getMove();
+
         if (!inAction && !inAir) {
             if (RefLinks.GetKeyHandler().K_shift.clicked) {
                 inAction=true;
                 setAnimation(roll);
+                animation.setDelay(3);
                 return;
             }
             if (RefLinks.GetKeyHandler().K_space.clicked) {
@@ -133,19 +149,22 @@ public class Player extends Entity
             if (MouseHandler.mouseB == 3) {
                 inAction=true;
                 setAnimation(parry);
+                animation.setDelay(1);
                 return;
             }
             if (MouseHandler.mouseB == 1) {
                 inAction=true;
                 nextAttack();
                 setAnimation(attack);
-                if (attackType != 3)  animation.setDelay(3);
+                if (attackType != 3)  animation.setDelay(2);
+                else animation.setDelay(1);
                 return;
             }
 
             if (xMove!=0) setAnimation(run);
             else setAnimation(idle);
         }
+
     }
 
     protected void manageState(){
@@ -182,8 +201,8 @@ public class Player extends Entity
     }
 
     protected void setRoll(){
-        if(direction==RIGHT) xMove= canMoveX(speed);
-        else    xMove= canMoveX(-speed);
+        if(direction==RIGHT) xMove= canMoveX(speed+3);
+        else    xMove= canMoveX(-speed-3);
     }
 
     protected void setJump(){
@@ -198,16 +217,28 @@ public class Player extends Entity
     }
 
     protected void setAttack(){
-        if (animation.getFrame()==4) EntityManager.attack(damage);
-        if (animation.getFrame()==9 && MouseHandler.mouseB==1) {
-            continueAttacking=true;
-            nextAttack();
+        int frame=animation.getFrame();
+        if (frame==4){
+            EntityManager.attack(damage,direction);
+        }
+        if (frame==9 ) {
+            animation.setDelay(5);
+            if (MouseHandler.mouseB==1) {
+                continueAttacking = true;
+                nextAttack();
+            }
+        }
+        if(frame==6){
+            animation.setDelay(2);
         }
         if(animation.onLastFrame()) {
             setAnimation(attack);
-            if (attackType != 3)  animation.setDelay(3);
+            if (attackType != 3)  animation.setDelay(2);
         }
-        xMove =0;
+        if (xMove!=0) {
+            setAnimation(run);
+            inAction=false;
+        }
     }
 
     protected void nextAttack(){
@@ -227,7 +258,14 @@ public class Player extends Entity
     }
 
     protected void resetAll(){
+    }
 
+    public void onEdge(){
+       if(bounds.x+Camera.getX_edge_left()> Map.getmWidthSize()){
+           RefLinks.getMapManager().changeLVL(1);
+           position.setX(position.getX()-bounds.x);
+           setBounds();
+       }
     }
 
     @Override
@@ -247,18 +285,18 @@ public class Player extends Entity
     @Override
     public void Draw(Graphics g)
     {
-        if(inAction && animation.hasPlayed(1)){
+        if(inAction && animation.onLastFrame()){
             inAction =false;
         }
 
         g.drawImage(animation.getImage(),(int)GetX(),(int)GetY(),width,height,null);
 
-//        g.setColor(Color.black);
-//        g.drawRect(bounds.x,bounds.y,bounds.width,bounds.height);
-//        g.setColor(Color.blue);
-//        g.drawRect(attackBounds.x,attackBounds.y,attackBounds.width,attackBounds.height);
-//        g.setColor(Color.red);
-//        g.drawRect((int)GetX(),(int)GetY(),width,height);
+        g.setColor(Color.black);
+        g.drawRect(bounds.x,bounds.y,bounds.width,bounds.height);
+        g.setColor(Color.blue);
+        g.drawRect(attackBounds.x,attackBounds.y,attackBounds.width,attackBounds.height);
+        g.setColor(Color.red);
+        g.drawRect((int)GetX(),(int)GetY(),width,height);
 
     }
 

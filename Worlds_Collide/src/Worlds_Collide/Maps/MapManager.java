@@ -1,7 +1,7 @@
 package Worlds_Collide.Maps;
 
-
-
+import Worlds_Collide.Graphics.Camera;
+import Worlds_Collide.Items.EntityManager;
 import Worlds_Collide.RefLinks;
 import Worlds_Collide.__Utils.DataBase;
 
@@ -11,8 +11,9 @@ import java.awt.Graphics;
 public class MapManager {
 
     private Map map;
-    private MapFactory mapFactory;
-    private Level level=Level.level_1;
+    private final MapFactory mapFactory;
+    private int level=7;
+    private boolean changeLvL=false;
     private final DataBase dataBase;
 
     public MapManager(DataBase dataBase){
@@ -32,11 +33,11 @@ public class MapManager {
     }
 
     public void loadMap(){
-        level=Level.getLvl(dataBase.getData("MAP","PLAYER"));
+        level= dataBase.getData("MAP","PLAYER");
     }
 
     public void saveMap(){
-        dataBase.updateMap(level.ordinal());
+        dataBase.updateMap(level);
     }
 
     public void buildMap(){
@@ -45,14 +46,17 @@ public class MapManager {
     }
 
     public int getLevel(){
-        return level.ordinal();
+        return level;
     }
 
     public void update(){
-//        if (check player){
-//
-//            //change map;;
-//        }
+        if (changeLvL) {
+            changeLvL=false;
+            EntityManager.reset();
+            buildMap();
+            Camera.init();
+
+        }
     }
 
     public void drawMapBack(Graphics g){
@@ -61,5 +65,11 @@ public class MapManager {
     public void drawMapFront(Graphics g){
         map.drawFront(g);
     }
+
+    public void changeLVL(int index){
+        level +=index;
+        changeLvL=true;
+    }
+
 
 }

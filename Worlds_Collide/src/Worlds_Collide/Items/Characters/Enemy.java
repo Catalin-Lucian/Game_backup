@@ -1,10 +1,14 @@
 package Worlds_Collide.Items.Characters;
 
 
+import Worlds_Collide.Animating.Animation;
 import Worlds_Collide.GUI.Health_bar;
+import Worlds_Collide.Graphics.Camera;
 import Worlds_Collide.Items.EntityManager;
 import Worlds_Collide.RefLinks;
 import Worlds_Collide.__Utils.Vector2D;
+
+import java.awt.*;
 
 public abstract class Enemy extends Entity {
 
@@ -22,6 +26,8 @@ public abstract class Enemy extends Entity {
 
     protected float range;
     protected float disEtoH;
+    protected int attackframe=0;
+    protected int gothitdirect;
 
 
     public Enemy(Vector2D pos, int width, int height) {
@@ -42,8 +48,9 @@ public abstract class Enemy extends Entity {
         return RefLinks.getPlayerBound().intersects(attackBounds);
     }
 
-    public void getHit(int damage){
+    public void getHit(int damage,int direction){
         life -= damage;
+        gothitdirect=direction;
         if (life<0) state=dead;
         else   {
             jump_speed=-10;
@@ -51,7 +58,7 @@ public abstract class Enemy extends Entity {
             state=hit;
         }
         setAnimation(state);
-        animation.setDelay(5);
+        animation.setDelay(2);
         inAction=true;
     }
 
@@ -77,27 +84,26 @@ public abstract class Enemy extends Entity {
     }
 
     protected void _dead(){
-        if (!inAction){
-            setAnimation(state);
-            inAction=true;
-        }
+        animation.setDelay(7);
         if(animation.onLastFrame()) EntityManager.removeEnemy(this);
     }
 
     protected void _hit(){
         --pushBack;
         if(pushBack<0) pushBack=0;
-        if (direction==LEFT) xMove=canMoveX(pushBack);
+        if (gothitdirect==RIGHT) xMove=canMoveX(pushBack);
         else xMove=canMoveX(-pushBack);
     }
 
     protected void _attack(){
        if (!inAction) {
            setAnimation(state);
-           animation.setDelay(6);
-           hitPlayer();
+           animation.setDelay(4);
            inAction=true;
        }
+       if (animation.getFrame()==attackframe)
+           hitPlayer();
+
     }
 
     protected void _idle(){
@@ -148,10 +154,39 @@ public abstract class Enemy extends Entity {
         return d;
     }
 
-
-
     protected void hitPlayer(){
-        RefLinks.getPlayer().getHit(damage);
+        if(inAttackRange())
+            RefLinks.getPlayer().getHit(damage);
+    }
+
+    @Override
+    public void Update(){
+        if(position.isONCamera()){
+            getState();
+            manageState();
+            Move();
+            animation.update();
+        }
+    }
+    @Override
+    public void Draw(Graphics g) {
+
+        if(position.isONCamera())
+        {
+            if (animation.hasPlayedOnce()) inAction =false;
+
+            if (state==attack || state==hit)
+                life_bar.drawRed(g,life);
+
+            g.drawImage(animation.getImage(),(int)(GetX()- Camera.getX_edge_left()),(int)GetY(),width,height,null);
+
+
+            g.setColor(Color.red);
+            g.drawRect((int)(bounds.x-Camera.getX_edge_left()),bounds.y,bounds.width,bounds.height);
+            g.drawRect((int)(attackBounds.x-Camera.getX_edge_left()),attackBounds.y,attackBounds.width,attackBounds.height);
+
+        }
+
     }
 }
 

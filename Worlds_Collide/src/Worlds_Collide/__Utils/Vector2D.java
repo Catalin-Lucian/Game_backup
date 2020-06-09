@@ -2,6 +2,7 @@ package Worlds_Collide.__Utils;
 
 import Worlds_Collide.Graphics.Camera;
 import Worlds_Collide.Input.MouseHandler;
+import Worlds_Collide.Maps.Map;
 import Worlds_Collide.RefLinks;
 
 public class Vector2D {
@@ -64,6 +65,13 @@ public class Vector2D {
     public boolean underMouse(float width,float height){
         return (MouseHandler.mouseX>x && MouseHandler.mouseX<x+width &&
                 MouseHandler.mouseY>y && MouseHandler.mouseY<y+height);
+    }
+
+    public boolean onLeftEdge(){
+        return x<0;
+    }
+    public boolean onRightEdge(){
+        return x> Map.getmWidthSize();
     }
 
 }

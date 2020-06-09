@@ -128,6 +128,6 @@ public class RefLinks
     }
 
     public static int getDifficulty(){
-        return stateManager.getDifficulty();
+        return stateManager.getDifficulty()+1;
     }
 }

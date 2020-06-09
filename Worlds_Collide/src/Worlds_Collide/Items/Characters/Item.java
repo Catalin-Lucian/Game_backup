@@ -25,6 +25,7 @@ public abstract class Item
         this.height = height;
 
         bounds=new Rectangle(0,0,0,0);
+        attackBounds=new Rectangle(0,0,0,0);
     }
 
     public abstract void Update();

@@ -14,7 +14,7 @@ public class PlayState extends State
 {
     private Player player;              /*!< Referinta catre obiectul animat erou (controlat de utilizator).*/
     private final MapManager mapManager;
-    private final EntityManager entityManager;
+    private EntityManager entityManager;
 
 
     public PlayState(StateManager stateManager)
@@ -39,7 +39,7 @@ public class PlayState extends State
     public void Update()
     {
 
-//        mapManager.update();
+        mapManager.update();
         player.Update();
         entityManager.Update();
 
@@ -64,7 +64,10 @@ public class PlayState extends State
     public void reset(){
         player=new Player(60, 350,2.5f );
     }
+    public void newMap(){
+        entityManager=new EntityManager();
 
+    }
 
 
 }

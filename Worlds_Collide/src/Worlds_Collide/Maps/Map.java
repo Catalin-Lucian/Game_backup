@@ -63,6 +63,7 @@ public abstract class  Map {
         for (int hpoz=0;hpoz<height_tiles;++hpoz){
             for (int wpoz=0;wpoz<width_tiles;++wpoz){
                 if (layers[nr_layers-1][hpoz][wpoz]==2) EntityManager.spawnEnemy(wpoz*TILE_SIZE,hpoz*TILE_SIZE);
+                if (layers[nr_layers-1][hpoz][wpoz]==3) EntityManager.spawnBoss(wpoz*TILE_SIZE,hpoz*TILE_SIZE);
             }
         }
     }
@@ -116,7 +117,7 @@ public abstract class  Map {
 
     public boolean getSolid(float w, float h){
         try {
-            return layers[nr_layers - 1][(int) (h / TILE_SIZE)][(int) (w/ TILE_SIZE)] != 0;
+            return layers[nr_layers - 1][(int) (h / TILE_SIZE)][(int) (w/ TILE_SIZE)] == 1;
         } catch (IndexOutOfBoundsException e) {
             return false;
         }
