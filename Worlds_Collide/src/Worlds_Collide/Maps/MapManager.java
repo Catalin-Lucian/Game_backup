@@ -12,7 +12,7 @@ public class MapManager {
 
     private Map map;
     private final MapFactory mapFactory;
-    private int level=7;
+    private int level=1;
     private boolean changeLvL=false;
     private final DataBase dataBase;
 

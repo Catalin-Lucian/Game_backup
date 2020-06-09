@@ -3,6 +3,7 @@ package Worlds_Collide.Items;
 import Worlds_Collide.Items.Characters.Enemy;
 import Worlds_Collide.Items.Characters.Enemys.Black_ball;
 import Worlds_Collide.Items.Characters.Enemys.Boss;
+import Worlds_Collide.Items.Characters.Enemys.Mushroom;
 import Worlds_Collide.RefLinks;
 
 import java.awt.*;
@@ -32,6 +33,7 @@ public class EntityManager {
 
     public static void removeEnemy(Enemy e){
         enemies.remove(e);
+        if(rd.nextInt(10)<4) RefLinks.getPlayer().addPotion();
     }
 
     public static void attack(int damage,int direction){
@@ -52,7 +54,7 @@ public class EntityManager {
         System.out.println(i);
         switch (i){
             case 0: return new Black_ball(x,y,2);
-            case 1: return new Black_ball(x,y,2);
+            case 1: return new Mushroom(x,y,5);
 
             default:return null;
         }
@@ -61,7 +63,9 @@ public class EntityManager {
     public static void reset(){
         enemies=new ArrayList<>();
     }
-
+    public boolean noEnemy(){
+        return enemies.isEmpty();
+    }
 
 }
 

@@ -10,6 +10,7 @@ public enum BType {
     SAVE,
     EXIT,
     CLOSE,
+    END;
 
 }
 

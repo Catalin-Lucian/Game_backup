@@ -22,6 +22,7 @@ public class PlayState extends State
         super(stateManager);
         entityManager=new EntityManager();
         player = new Player(60, 150,2.5f );
+
         mapManager=new MapManager(stateManager.dataBase);
         new Camera();
     }
@@ -31,6 +32,9 @@ public class PlayState extends State
         entityManager=new EntityManager();
         player = new Player(60, 150,2.5f );
         player.SetLife(stateManager.dataBase.getData("LIFE","PLAYER"));
+        player.setPosition(stateManager.dataBase.getData("X","PLAYER"),stateManager.dataBase.getData("Y","PLAYER"));
+        player.setDeaths(stateManager.dataBase.getData("DEATHS","PLAYER"));
+        player.setPotions(stateManager.dataBase.getData("BOTTLES","PLAYER"));
         mapManager=new MapManager(stateManager.dataBase,true);
         new Camera();
     }
@@ -39,6 +43,7 @@ public class PlayState extends State
     public void Update()
     {
 
+
         mapManager.update();
         player.Update();
         entityManager.Update();
@@ -46,6 +51,8 @@ public class PlayState extends State
         if (RefLinks.GetKeyHandler().K_escape.clicked){
             stateManager.selectState(BType.PAUSE);
         }
+
+        if (mapManager.getLevel()==7 && entityManager.noEnemy()) stateManager.selectState(BType.END);
 
     }
 

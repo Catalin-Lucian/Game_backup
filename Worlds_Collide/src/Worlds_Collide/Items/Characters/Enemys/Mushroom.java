@@ -3,6 +3,7 @@ package Worlds_Collide.Items.Characters.Enemys;
 import Worlds_Collide.Animating.Animation;
 import Worlds_Collide.Graphics.Assets;
 import Worlds_Collide.Items.Characters.Enemy;
+import Worlds_Collide.RefLinks;
 import Worlds_Collide.__Utils.Vector2D;
 
 import java.awt.*;
@@ -14,11 +15,15 @@ public class Mushroom extends Enemy {
         pSprite=Assets.mushroom;
         animation=new Animation(pSprite.getSpriteArray(state));
 
-        bounds=new Rectangle((int)GetX()+20,(int)GetY()+30,width-40,height-60);
-        attackBounds=new Rectangle((int)GetX()+50,(int)GetY()+50,width-100,height-100);
+        bounds=new Rectangle((int)GetX()+150,(int)GetY()+150,50,60);
+        attackBounds=new Rectangle(bounds);
 
 
-        damage=2;
+        damage=10* RefLinks.getDifficulty();
+        life=100*(RefLinks.getDifficulty());
+        life_bar.setFull(life);
+
+
         range=350;
         speed=DEFAULT_SPEED-4;
 

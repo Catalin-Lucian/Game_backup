@@ -41,6 +41,7 @@ public class SettingsState extends State
     {
         x.update();
         if(x.clicked()){
+            stateManager.dataBase.updateSettings(stateManager.quality,stateManager.difficulty);
             stateManager.Return();
         }
         qlt.update();

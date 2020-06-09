@@ -25,10 +25,11 @@ public class Boss extends Enemy {
         attackBounds.width=bounds.width+bounds.width;
 
         range=1000;
-        life=500*RefLinks.getDifficulty();;
+        life=200*RefLinks.getDifficulty();
         life_bar.setFull(life);
 
         attackframe=13;
+        animationspeed=4;
 
         damage=40* RefLinks.getDifficulty();
         speed=4f;

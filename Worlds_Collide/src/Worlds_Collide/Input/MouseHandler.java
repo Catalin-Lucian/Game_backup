@@ -58,5 +58,6 @@ public class MouseHandler implements MouseInputListener {
     public void mouseMoved(MouseEvent mouseEvent) {
         mouseX=mouseEvent.getX();
         mouseY=mouseEvent.getY();
+       // System.out.println(mouseX+" "+mouseY);
     }
 }

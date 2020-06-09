@@ -3,6 +3,7 @@ package Worlds_Collide.States;
 import Worlds_Collide.GUI.BType;
 import Worlds_Collide.GUI.MButton;
 import Worlds_Collide.Graphics.Assets;
+import Worlds_Collide.Items.EntityManager;
 import Worlds_Collide.RefLinks;
 
 import java.awt.*;
@@ -14,6 +15,7 @@ public class PauseState extends State {
     protected MButton x_button;
     protected MButton save_button;
     protected MButton exit_button;
+    protected boolean saved=false;
 
     public PauseState(StateManager stateManager) {
         super(stateManager);
@@ -29,11 +31,15 @@ public class PauseState extends State {
         if (x_button.clicked() ) stateManager.Return();
         save_button.update();
         if (save_button.clicked()){
-            RefLinks.getPlayer().saveLife(stateManager.dataBase);
+            RefLinks.getPlayer().saveStats(stateManager.dataBase);
             RefLinks.getMapManager().saveMap();
+            saved=true;
         }
         exit_button.update();
-        if(exit_button.clicked()) stateManager.selectState(BType.MENU);
+        if(exit_button.clicked()){
+            stateManager.selectState(BType.MENU);
+            EntityManager.reset();
+        }
 
     }
 
@@ -44,5 +50,6 @@ public class PauseState extends State {
         x_button.draw(g);
         save_button.draw(g);
         exit_button.draw(g);
+        if (saved) g.drawImage(Assets.save,RefLinks.GetWidth()-100,RefLinks.GetHeight()-100,100,100,null);
     }
 }

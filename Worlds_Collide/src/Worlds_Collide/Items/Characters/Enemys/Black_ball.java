@@ -27,7 +27,7 @@ public class Black_ball extends Enemy {
         life_bar.setFull(life);
 
         attackframe=3;
-
+        animationspeed=7;
         state=idle;
     }
 

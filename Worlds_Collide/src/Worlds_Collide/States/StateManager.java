@@ -57,8 +57,10 @@ public class StateManager {
                 currentState=new AboutState(this);break;
             case PAUSE:
                 currentState=new PauseState(this);break;
+            case END:
+                currentState=new EndSatate(this);break;
             case EXIT:
-                dataBase.updateSettings(quality,difficulty);
+                dataBase.close();
                 RefLinks.GetGame().StopGame();
 
 

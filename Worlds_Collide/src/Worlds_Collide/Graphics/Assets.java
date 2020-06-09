@@ -19,6 +19,8 @@ public class Assets
     public static TilesSprite menu_button;
     public static BufferedImage pause_image;
     public static TilesSprite map_sprite;
+    public static BufferedImage win_image;
+    public static BufferedImage save;
 
     public static BufferedImage back_1;
     public static BufferedImage front_1;
@@ -35,7 +37,7 @@ public class Assets
     public static BufferedImage back_7;
     public static BufferedImage front_7;
 
-
+    public static TilesSprite potion;
 
 
 
@@ -52,12 +54,15 @@ public class Assets
         about_image=ImageLoader.LoadImage("/Textures/GUI/about.png");
         settings_image=ImageLoader.LoadImage("/Textures/GUI/settings.png");
         pause_image=ImageLoader.LoadImage("/Textures/GUI/pause.png");
+        win_image=ImageLoader.LoadImage("/Textures/GUI/win.png");
+        save=ImageLoader.LoadImage("/Textures/GUI/save.png");
         check_button=new TilesSprite(36,36,ImageLoader.LoadImage("/Textures/GUI/checker.png"));
         life_bar=new TilesSprite(340,68,ImageLoader.LoadImage("/Textures/GUI/lifebar.png"));
         x_button=new TilesSprite(43,60,ImageLoader.LoadImage("/Textures/GUI/x_button.png"));
         menu_button=new TilesSprite(336,96,ImageLoader.LoadImage("/Textures/GUI/menu_buttons.png"));
+        
 
-
+        potion=new TilesSprite(160,160,ImageLoader.LoadImage("/Textures/GUI/potion.png"));
 
         back_1 =ImageLoader.LoadImage("/Textures/Levels/level_1/lvl_1_back.png");
         front_1 =ImageLoader.LoadImage("/Textures/Levels/level_1/lvl_1_front.png");

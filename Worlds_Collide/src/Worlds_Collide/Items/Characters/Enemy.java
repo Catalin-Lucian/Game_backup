@@ -28,6 +28,7 @@ public abstract class Enemy extends Entity {
     protected float disEtoH;
     protected int attackframe=0;
     protected int gothitdirect;
+    protected int animationspeed=7;
 
 
     public Enemy(Vector2D pos, int width, int height) {
@@ -58,14 +59,16 @@ public abstract class Enemy extends Entity {
             state=hit;
         }
         setAnimation(state);
-        animation.setDelay(2);
+        animation.setDelay(1);
         inAction=true;
     }
 
     public void getState(){
        if(!inAction) {
            if (detectHero()) {
-               if (inAttackRange()) state = attack;
+               if (inAttackRange()){
+                    state = attack;
+               }
                else state = move;
            } else state = idle;
        }
@@ -113,11 +116,13 @@ public abstract class Enemy extends Entity {
     protected void _run(){
         if(disEtoH >0){
             direction=LEFT;
-            xMove=canMoveX(-speed);
+            if (disEtoH<speed)   xMove=canMoveX(-disEtoH-1);
+            else xMove=canMoveX(-speed);
         }
         if(disEtoH <0){
             direction=RIGHT;
-            xMove=canMoveX(speed);
+            if (-disEtoH<speed) xMove=canMoveX(-disEtoH+1);
+            else xMove=canMoveX(speed);
         }
         setAnimation(state);
     }
@@ -127,7 +132,9 @@ public abstract class Enemy extends Entity {
         if (currentAnimation!=lastAnimation){
             animation.setFrames(pSprite.getSpriteArray(currentAnimation));
             lastAnimation=currentAnimation;
+
         }
+        animation.setDelay(animationspeed);
     }
 
 
@@ -159,9 +166,13 @@ public abstract class Enemy extends Entity {
             RefLinks.getPlayer().getHit(damage);
     }
 
+    public boolean onCamera(){
+        return bounds.x>Camera.getX_edge_left() &&  bounds.x+bounds.width<Camera.getX_edge_right()+100;
+    }
+
     @Override
     public void Update(){
-        if(position.isONCamera()){
+        if(onCamera()){
             getState();
             manageState();
             Move();
@@ -171,7 +182,7 @@ public abstract class Enemy extends Entity {
     @Override
     public void Draw(Graphics g) {
 
-        if(position.isONCamera())
+        if(onCamera())
         {
             if (animation.hasPlayedOnce()) inAction =false;
 
@@ -181,9 +192,10 @@ public abstract class Enemy extends Entity {
             g.drawImage(animation.getImage(),(int)(GetX()- Camera.getX_edge_left()),(int)GetY(),width,height,null);
 
 
-            g.setColor(Color.red);
-            g.drawRect((int)(bounds.x-Camera.getX_edge_left()),bounds.y,bounds.width,bounds.height);
-            g.drawRect((int)(attackBounds.x-Camera.getX_edge_left()),attackBounds.y,attackBounds.width,attackBounds.height);
+//            g.setColor(Color.red);
+//            g.drawRect((int)(bounds.x-Camera.getX_edge_left()),bounds.y,bounds.width,bounds.height);
+//            g.setColor(Color.green);
+//            g.drawRect((int)(attackBounds.x-Camera.getX_edge_left()),attackBounds.y,attackBounds.width,attackBounds.height);
 
         }
 

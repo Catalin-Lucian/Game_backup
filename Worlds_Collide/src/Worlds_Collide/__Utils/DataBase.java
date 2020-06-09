@@ -1,9 +1,6 @@
 package Worlds_Collide.__Utils;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 
 public class DataBase {
@@ -53,6 +50,40 @@ public class DataBase {
     public void updateLife(int life){
         try{
             stmt.executeUpdate("UPDATE PLAYER SET LIFE = "+life);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void updateDeaths(int deaths){
+        try{
+            stmt.executeUpdate("UPDATE PLAYER SET DEATHS = "+deaths);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void updatePotions(int potions){
+        try{
+            stmt.executeUpdate("UPDATE PLAYER SET BOTTLES = "+potions);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void updatePosition(int x,int y){
+        try{
+            stmt.executeUpdate("UPDATE PLAYER SET X = "+x);
+            stmt.executeUpdate("UPDATE PLAYER SET Y = "+y);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void close() {
+        try{
+            stmt.close();
+            c.close();
         }catch (Exception e){
             e.printStackTrace();
         }

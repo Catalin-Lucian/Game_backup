@@ -42,20 +42,35 @@ public class Player extends Entity
     private short state = idle;
     private short attackType=0;
     private boolean continueAttacking=false;
+    protected int potions=0;
+    protected Animation pAnimation;
+    protected Vector2D startMapPosition;
+
+
+    protected int fulllife;
+    protected int count=0;
+
+    protected int deaths=0;
+    protected Font myfont=new Font("Monospaced", Font.BOLD,25);
 
 
     public Player(float x, float y)
     {
         super(new Vector2D(x,y),Assets.player.getW(),Assets.player.getH());
+        startMapPosition=new Vector2D(position);
+
         pSprite=Assets.player;
         bounds=new Rectangle(0,0,0,0);
         setBounds();
-        attackBounds=new Rectangle(bounds.x,bounds.y,bounds.width+width/3,bounds.height);
+        setAttackBounds();
         animation=new Animation(pSprite.getSpriteArray(R_idle));
+        pAnimation=new Animation(Assets.potion.getSpriteArray());
+        pAnimation.setDelay(100);
 
         damage=10;
 
         life=1000;
+        fulllife=life;
         life_bar=new Health_bar(0,0,life);
 
         state=idle;
@@ -66,16 +81,20 @@ public class Player extends Entity
     public Player(float x, float y, float size)
     {
         super(new Vector2D(x,y),(int)(Assets.player.getW()*size),(int)(Assets.player.getH()*size));
+
+        startMapPosition=new Vector2D(position);
         pSprite=Assets.player;
 
         bounds=new Rectangle(0,0,0,0);
         setBounds();
-        attackBounds=new Rectangle(bounds.x,bounds.y,bounds.width+width/4,bounds.height);
+        setAttackBounds();
         animation=new Animation(pSprite.getSpriteArray(R_idle));
-
+        pAnimation=new Animation(Assets.potion.getSpriteArray());
+        animation.setDelay(100);
         damage=10;
 
         life=1000;
+        fulllife=life;
         life_bar=new Health_bar(0,0,life);
 
         state=idle;
@@ -92,10 +111,12 @@ public class Player extends Entity
         manageState();
         Move();
         animation.update();
+        pAnimation.update();
+        pAnimation.setDelay(10);
 
 
         if(direction==RIGHT) attackBounds.x=bounds.x;
-        else    attackBounds.x=bounds.x-width/4;
+        else    attackBounds.x=bounds.x-width/3;
 
         onEdge();
     }
@@ -108,10 +129,14 @@ public class Player extends Entity
     }
 
     public void setBounds(){
-        bounds.x=(int)(position.getX()+width/3);
+        bounds.x=(int)(position.getX()+width/2-20);
         bounds.y=(int)(position.getY()+width/3);
-        bounds.width=width/3;
+        bounds.width=40;
         bounds.height=(int)(height/2.3);
+    }
+
+    public void setAttackBounds(){
+        attackBounds=new Rectangle(bounds.x,bounds.y,bounds.width+width/3,bounds.height);
     }
 
 
@@ -130,6 +155,19 @@ public class Player extends Entity
 
     protected void getState() {
         getMove();
+        count++;
+        if (RefLinks.GetKeyHandler().K_q.clicked && count>10) {
+            count=0;
+            if(potions>0 ){
+                if (life+100>fulllife){
+                    life=fulllife;
+                }
+                else {
+                    life += 100;
+                }
+                potions--;
+            }
+        }
 
         if (!inAction && !inAir) {
             if (RefLinks.GetKeyHandler().K_shift.clicked) {
@@ -174,11 +212,23 @@ public class Player extends Entity
             case parry: setParry();break;
             case attack: setAttack();break;
             case dead: setDead();break;
-            case hit :
-                if (RefLinks.GetKeyHandler().K_shift.clicked) setAnimation(roll);
+            case hit : setHit();
+
         }
         gravity();
     }
+
+
+    protected void setHit(){
+        if (RefLinks.GetKeyHandler().K_shift.clicked) setAnimation(roll);
+        if (RefLinks.GetKeyHandler().K_space.clicked) {
+            inAir=true;
+            inAction=true;
+            jump_speed=-18;
+            setAnimation(jump);
+            animation.setDelay(5);
+        }
+     }
 
     public void getHit(int damage){
         if (state!=parry && state!=roll)
@@ -258,6 +308,12 @@ public class Player extends Entity
     }
 
     protected void resetAll(){
+        deaths++;
+        life=fulllife;
+        position.setVector(startMapPosition);
+        setBounds();
+        setAttackBounds();
+        Camera.init();
     }
 
     public void onEdge(){
@@ -265,7 +321,28 @@ public class Player extends Entity
            RefLinks.getMapManager().changeLVL(1);
            position.setX(position.getX()-bounds.x);
            setBounds();
+           setAttackBounds();
+           startMapPosition.setVector(position);
        }
+    }
+
+    public void setDeaths(int deaths){
+        this.deaths=deaths;
+    }
+
+    public int getDeaths() {
+        return deaths;
+    }
+
+    public int getPotions() {
+        return potions;
+    }
+
+    public void setPotions(int potions){
+        this.potions=potions;
+    }
+    public void addPotion(){
+        potions++;
     }
 
     @Override
@@ -278,8 +355,17 @@ public class Player extends Entity
         super.SetLife(life);
     }
 
-    public void saveLife(DataBase d){
+    public void saveStats(DataBase d){
         d.updateLife(life);
+        d.updateDeaths(deaths);
+        d.updatePotions(potions);
+        d.updatePosition((int)startMapPosition.getX(),(int)startMapPosition.getY());
+    }
+
+    public void setPosition(int x ,int y){
+        position.setVector(x,y);
+        setBounds();
+        setAttackBounds();
     }
 
     @Override
@@ -291,12 +377,17 @@ public class Player extends Entity
 
         g.drawImage(animation.getImage(),(int)GetX(),(int)GetY(),width,height,null);
 
-        g.setColor(Color.black);
-        g.drawRect(bounds.x,bounds.y,bounds.width,bounds.height);
-        g.setColor(Color.blue);
-        g.drawRect(attackBounds.x,attackBounds.y,attackBounds.width,attackBounds.height);
+//        g.setColor(Color.black);
+//        g.drawRect(bounds.x,bounds.y,bounds.width,bounds.height);
+//        g.setColor(Color.blue);
+//        g.drawRect(attackBounds.x,attackBounds.y,attackBounds.width,attackBounds.height);
+//        g.setColor(Color.red);
+//        g.drawRect((int)GetX(),(int)GetY(),width,height);
+
         g.setColor(Color.red);
-        g.drawRect((int)GetX(),(int)GetY(),width,height);
+        g.drawImage(pAnimation.getImage(),-30,550,160,160,null);
+        g.setFont(myfont);
+        g.drawString(Integer.toString(potions),100,700);
 
     }
 
